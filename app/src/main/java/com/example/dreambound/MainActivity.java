@@ -10,7 +10,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     // Player and Enemy stats
-    private int playerHealth = 100;
+    private int playerHealth = 95;
     private int enemyHealth = 100;
     private int playerAttackPower = 20;
     private int enemyAttackPower = 15;
