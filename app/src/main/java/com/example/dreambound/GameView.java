@@ -11,14 +11,17 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread gameThread;
     private boolean isPlaying;
     private Player player;
+    private Enemies enemies;
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
-    private static final float movementSpeed = 5.0f;
+    private static final float playerMovementSpeed = 5.0f;
+    private static final float enemiesDetectionRadius = 400.0f;
 
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
-        player = new Player(100, 100, 50, 100);
+        player = new Player(100, 500, 50, 100);
+        enemies = new Enemies(2200, 500, 50, 100);
         targetX = player.getX();
         targetY = player.getY();
     }
@@ -39,15 +42,17 @@ public class GameView extends SurfaceView implements Runnable {
         float deltaY = targetY - playerY;
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-        if (distance > movementSpeed) {
-            float stepX = movementSpeed * (deltaX / distance);
-            float stepY = movementSpeed * (deltaY / distance);
+        if (distance > playerMovementSpeed) {
+            float stepX = playerMovementSpeed * (deltaX / distance);
+            float stepY = playerMovementSpeed * (deltaY / distance);
             player.setX(playerX + stepX);
             player.setY(playerY + stepY);
         } else {
             player.setX(targetX);
             player.setY(targetY);
         }
+
+        enemies.followPlayer(player, enemiesDetectionRadius);
 
         checkBoundaries();
     }
@@ -72,6 +77,7 @@ public class GameView extends SurfaceView implements Runnable {
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
                 player.draw(canvas);
+                enemies.draw(canvas);
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
