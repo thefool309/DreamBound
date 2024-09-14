@@ -3,6 +3,7 @@ package com.example.dreambound;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -107,7 +108,7 @@ public class GameView extends SurfaceView implements Runnable {
             isPlaying = false;
             gameThread.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("Interrupted", "Interrupted while pausing");      //cleaned up exception to get more receptive feedback
         }
     }
 
@@ -115,7 +116,7 @@ public class GameView extends SurfaceView implements Runnable {
         try {
             Thread.sleep(17);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("Interrupted", "Interrupted while sleeping");    //cleaned up exception to get more receptive feedback
         }
     }
 }
