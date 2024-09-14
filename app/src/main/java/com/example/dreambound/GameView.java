@@ -54,8 +54,22 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         enemies.followPlayer(player, enemiesDetectionRadius);
-
+        checkCollisionEnemies(player, enemies);
         checkBoundaries();
+    }
+
+    private void checkCollisionEnemies(Player player, Enemies enemies) {
+        if(checkCollision(player, enemies)){
+            Log.i("When Worlds Collide", "Collision Detected");
+        }
+
+    }
+
+    private boolean checkCollision(Character player, Character target) {
+        return player.getX() < target.getX() + target.getWidth() &&
+                player.getX() + player.getWidth() > target.getX() &&
+                player.getY() < target.getY() + target.getHeight() &&
+                player.getY() + player.getHeight() > target.getY();
     }
 
     private void checkBoundaries() {
