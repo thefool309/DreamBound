@@ -7,7 +7,7 @@ public class Character {
     protected float x, y;
     protected float width, height;
     protected Paint paint;
-
+    //Constructor
     Character(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
@@ -16,7 +16,7 @@ public class Character {
         paint = new Paint();
         paint.setColor(Color.RED);
     }
-
+    //accessors and mutators
     public void setX(float x) {
         this.x = x;
     }
@@ -40,7 +40,7 @@ public class Character {
     public float getHeight() {
         return height;
     }
-
+    //set position function
     public void setPosition(float _x, float _y) {
         this.x = _x - width / 2;
         this.y = _y - height / 2;

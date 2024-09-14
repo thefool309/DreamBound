@@ -6,18 +6,18 @@ import android.graphics.Paint;
 
 public class Enemies extends Character {
     private static final float enemiesSpeed = 3.0f;
-
+    //constructor
     public Enemies(float x, float y, float _enemiesWidth, float _enemiesHeight)  {
         super(x, y, _enemiesWidth, _enemiesHeight);
         paint = new Paint();
         paint.setColor(Color.BLUE);
     }
 
-
+    //draw
     public void draw(Canvas canvas) {
         canvas.drawRect(x, y, x + width, y + height, paint);
     }
-
+    //enemy movement ai
     public void followPlayer(Player player, float detectionRadius) {
         float deltaX = player.getX() - this.x;
         float deltaY = player.getY() - this.y;
