@@ -60,14 +60,14 @@ public class GameView extends SurfaceView implements Runnable {
     private void checkBoundaries() {
         if (player.getX() < 0) {
             player.setX(0);
-        } else if (player.getX() + player.getPlayerWidth() > getWidth()) {
-            player.setX(getWidth() - player.getPlayerWidth());
+        } else if (player.getX() + player.getWidth() > getWidth()) {
+            player.setX(getWidth() - player.getWidth());
         }
 
         if (player.getY() < 0) {
             player.setY(0);
-        } else if (player.getY() + player.getPlayerHeight() > getHeight()) {
-            player.setY(getHeight() - player.getPlayerHeight());
+        } else if (player.getY() + player.getHeight() > getHeight()) {
+            player.setY(getHeight() - player.getHeight());
         }
     }
 
