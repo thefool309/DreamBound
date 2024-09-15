@@ -15,7 +15,7 @@
     <EditText
             android:layout_width="125pt"
             android:layout_height="25pt"
-            android:hint="@string/email"
+            android:autofillHints="" android:hint="@string/email"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="20sp"
@@ -28,7 +28,7 @@
     <EditText
             android:layout_width="125pt"
             android:layout_height="25pt"
-            android:hint="@string/password"
+            android:autofillHints="" android:hint="@string/password"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="20sp"
