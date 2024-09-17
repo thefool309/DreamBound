@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">DreamBound</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login">LogIn</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="create_account">Create account</string>
 </resources>
