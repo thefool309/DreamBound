@@ -1,12 +1,15 @@
 package com.example.dreambound;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 public class GameView extends SurfaceView implements Runnable {
     private Thread gameThread;
@@ -60,6 +63,15 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void checkCollisionEnemies(Player player, Enemies enemies) {
         if(checkCollision(player, enemies)){
+            boolean playerWon = false; //bool to keep track of player win/loss
+            //intent to switch activities
+            Intent intent = new Intent(this.getContext(), BattleActivity.class);
+
+            //TODO:Implement logic to receive boolean from intent
+
+            //TODO:Implement Game Over logic and screen.
+
+            this.getContext().startActivity(intent);
             Log.i("When Worlds Collide", "Collision Detected");
         }
 
