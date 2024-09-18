@@ -1,8 +1,5 @@
 package com.example.dreambound;
 
-
-import android.graphics.Canvas;
-
 public class Character extends GameObject {
     //Stats class
     public static class Stats{

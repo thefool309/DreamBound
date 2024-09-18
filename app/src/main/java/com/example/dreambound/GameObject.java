@@ -20,8 +20,7 @@ public class GameObject {
     public Paint paint;
 
     GameObject(float x, float y, float width, float height) {
-        this.position.x = x;
-        this.position.y = y;
+        position = new Position(x, y);
         this.width = width;
         this.height = height;
         paint = new Paint();
@@ -30,11 +29,11 @@ public class GameObject {
 
     //accessors and mutators
     public void setX(float x) {
-        this.position.x = x;
+        position.x = x;
     }
 
     public void setY(float y) {
-        this.position.y = y;
+        position.y = y;
     }
 
     public float getX() {
@@ -58,8 +57,8 @@ public class GameObject {
     }
     //set position function
     public void setPosition(float _x, float _y) {
-        this.position.x = _x - width / 2;
-        this.position.y = _y - height / 2;
+        position.x = _x - width / 2;
+        position.y = _y - height / 2;
     }
 
     public void draw(Canvas canvas) {

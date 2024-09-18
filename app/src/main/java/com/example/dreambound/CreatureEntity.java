@@ -14,6 +14,7 @@ public class CreatureEntity extends Character {
     }
 
     //draw
+    @Override
     public void draw(Canvas canvas) {
         canvas.drawRect(position.x, position.y, position.x + width, position.y + height, paint);
     }

@@ -12,6 +12,7 @@ public class Player extends Character{
         paint.setColor(Color.RED);
     }
     //draw
+    @Override
     public void draw(Canvas canvas) {
         canvas.drawRect(position.x, position.y, position.x + width, position.y + height, paint);
     }

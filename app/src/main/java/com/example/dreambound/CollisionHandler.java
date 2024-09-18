@@ -2,13 +2,13 @@ package com.example.dreambound;
 
 import android.content.Context;
 import android.util.Log;
-import androidx.constraintlayout.core.widgets.Rectangle;
+
 
 import java.util.HashMap;
 
 public class CollisionHandler {
     private static final int CHUNK_SIZE = 16;
-    GameView gameView = null;
+
     Player player;
     Context context = null;
     int windowHeight;
@@ -82,7 +82,7 @@ public class CollisionHandler {
         };
     //TODO: Data structure for collide-able entities
         byte[] gameObjectData;
-        HashMap<GameObject.Position, GameObject> GameObjectMap;
+        HashMap<Integer, GameObject> GameObjectMap;
     //TODO: Data structure for Creature Entities
         HashMap<GameObject.Position, CreatureEntity> CreatureEntityList;
         byte[] creatureEntityObjectData;
@@ -101,24 +101,22 @@ public class CollisionHandler {
         for(int i = 0; i < gridHeight; i++) {
             for(int j = 0; j < gridWidth; j++) {
                 if(tileMapGenerator[i][j] == 'b') {
-                    GameObject newObject = new GameObject(j * 16, i * 16, 16, 16);
-                    GameObjectMap.put(newObject.position, newObject);
+                    GameObject newObject = new GameObject(j * CHUNK_SIZE, i * CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
+                    GameObjectMap.putIfAbsent((int) newObject.position.x, newObject);
                 }
             }
         }
     }
 
-    void checkCollisionWithObjects(){
+    //TODO: traverse our data structure and find objects from position quickly
+
+    void checkCollisionWithObjects() throws NullPointerException {
         GameObject.Position position = player.getPosition();
-        try {
-            GameObject gameObject = GameObjectMap.get(position);
-            //gameObject.draw(gameView.canvas);
+        GameObject gameObject = GameObjectMap.get(position);
+        //gameObject.draw(gameView.canvas);
+        if (gameObject != null) {
             Log.i("Collision Success", "Collision was successful");
         }
-        catch(NullPointerException e){
 
-        }
     }
-
-    //TODO: traverse our data structure and find objects from position quickly
 }

@@ -10,8 +10,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 
-
 public class GameView extends SurfaceView implements Runnable {
+    private static final int CHUNK_SIZE = 16;
     private Thread gameThread;
     private boolean isPlaying;
     private Player player;
@@ -26,8 +26,8 @@ public class GameView extends SurfaceView implements Runnable {
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
-        player = new Player(100, 500, 50, 100);
-        creatureEntity = new CreatureEntity(2200, 500, 50, 100);
+        player = new Player(100, 500, CHUNK_SIZE, CHUNK_SIZE);
+        creatureEntity = new CreatureEntity(2200, 500, CHUNK_SIZE, CHUNK_SIZE);
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, player);
