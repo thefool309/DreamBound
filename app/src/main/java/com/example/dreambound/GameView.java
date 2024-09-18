@@ -15,7 +15,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread gameThread;
     private boolean isPlaying;
     private Player player;
-    private Enemies enemies;
+    private CreatureEntity creatureEntity;
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
     private static final float playerMovementSpeed = 5.0f;
@@ -25,7 +25,7 @@ public class GameView extends SurfaceView implements Runnable {
         super(context);
         surfaceHolder = getHolder();
         player = new Player(100, 500, 50, 100);
-        enemies = new Enemies(2200, 500, 50, 100);
+        creatureEntity = new CreatureEntity(2200, 500, 50, 100);
         targetX = player.getX();
         targetY = player.getY();
     }
@@ -56,13 +56,13 @@ public class GameView extends SurfaceView implements Runnable {
             player.setY(targetY);
         }
 
-        enemies.followPlayer(player, enemiesDetectionRadius);
-        checkCollisionEnemies(player, enemies);
+        creatureEntity.followPlayer(player, enemiesDetectionRadius);
+        checkCollisionEnemies(player, creatureEntity);
         checkBoundaries();
     }
 
-    private void checkCollisionEnemies(Player player, Enemies enemies) {
-        if(checkCollision(player, enemies)){
+    private void checkCollisionEnemies(Player player, CreatureEntity creatureEntity) {
+        if(checkCollision(player, creatureEntity)){
             boolean playerWon = false; //bool to keep track of player win/loss
             //intent to switch activities
             Intent intent = new Intent(this.getContext(), BattleActivity.class);
@@ -104,7 +104,7 @@ public class GameView extends SurfaceView implements Runnable {
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
                 player.draw(canvas);
-                enemies.draw(canvas);
+                creatureEntity.draw(canvas);
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
