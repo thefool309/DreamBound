@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import static androidx.core.content.ContextCompat.startActivity;
+
 
 public class GameView extends SurfaceView implements Runnable {
     private Thread gameThread;
