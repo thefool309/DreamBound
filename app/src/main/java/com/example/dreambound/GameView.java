@@ -20,6 +20,8 @@ public class GameView extends SurfaceView implements Runnable {
     private float targetX, targetY;
     private static final float playerMovementSpeed = 5.0f;
     private static final float enemiesDetectionRadius = 400.0f;
+    private CollisionHandler collisionHandler;
+
 
     public GameView(Context context) {
         super(context);
@@ -28,6 +30,7 @@ public class GameView extends SurfaceView implements Runnable {
         creatureEntity = new CreatureEntity(2200, 500, 50, 100);
         targetX = player.getX();
         targetY = player.getY();
+        collisionHandler = new CollisionHandler(context, player);
     }
 
     @Override
@@ -38,6 +41,7 @@ public class GameView extends SurfaceView implements Runnable {
             control();
         }
     }
+
 
     private void update() {
         float playerX = player.getX();
@@ -58,8 +62,11 @@ public class GameView extends SurfaceView implements Runnable {
 
         creatureEntity.followPlayer(player, enemiesDetectionRadius);
         checkCollisionEnemies(player, creatureEntity);
+        collisionHandler.checkCollisionWithObjects();
         checkBoundaries();
     }
+
+
 
     private void checkCollisionEnemies(Player player, CreatureEntity creatureEntity) {
         if(checkCollision(player, creatureEntity)){
