@@ -6,7 +6,6 @@ import android.util.Log;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CollisionHandler {
 
@@ -33,7 +32,7 @@ public class CollisionHandler {
         windowHeight = context.getResources().getDisplayMetrics().heightPixels;
         windowWidth = context.getResources().getDisplayMetrics().widthPixels;
     }
-
+    //generic check between two objects for collision
     private boolean checkCollision(GameObject player, GameObject target) {
         return player.getX() < target.getX() + target.getWidth() &&
                 player.getX() + player.getWidth() > target.getX() &&
@@ -81,6 +80,11 @@ public class CollisionHandler {
                 }
             }
         }
+    }
+
+    void collisionWithObjectEvents(GameObject target1, GameObject target2) {
+        //TODO: implement physics logic.
+
     }
 
     private void collisionWithCreatureEntitiesEvent() {

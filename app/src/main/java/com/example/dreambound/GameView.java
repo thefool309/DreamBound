@@ -81,9 +81,6 @@ public class GameView extends SurfaceView implements Runnable {
     //        boolean playerWon = false; //bool to keep track of player win/loss
     //        //intent to switch activities
     //        Intent intent = new Intent(this.getContext(), BattleActivity.class);
-            //TODO:Implement logic to receive boolean from intent
-
-            //TODO:Implement Game Over logic and screen.
     //        this.getContext().startActivity(intent);
     //        Log.i("When Worlds Collide", "Collision Detected");
     //    }
