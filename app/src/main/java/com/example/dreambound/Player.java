@@ -2,13 +2,14 @@ package com.example.dreambound;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
+import java.io.Serializable;
 
-public class Player extends Character{
+public class Player extends Character implements Serializable {
 
     //constructor
     public Player(float _x, float _y, float _playerWidth, float _playerHeight) {
         super(_x, _y, _playerWidth, _playerHeight);
+        initPaint(Color.RED);
     }
     //draw
     public void draw(Canvas canvas) {

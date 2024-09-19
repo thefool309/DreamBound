@@ -2,11 +2,12 @@ package com.example.dreambound;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import java.io.Serializable;
 
-public class Character {
+public class Character implements Serializable {
     protected float x, y;
     protected float width, height;
-    protected Paint paint;
+    protected transient Paint paint;
     //Constructor
     Character(float x, float y, float width, float height) {
         this.x = x;
@@ -44,6 +45,11 @@ public class Character {
     public void setPosition(float _x, float _y) {
         this.x = _x - width / 2;
         this.y = _y - height / 2;
+    }
+
+    public void initPaint(int color) {
+        paint = new Paint();
+        paint.setColor(color);
     }
 }
 

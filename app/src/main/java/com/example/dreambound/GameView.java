@@ -17,12 +17,19 @@ public class GameView extends SurfaceView implements Runnable {
     private float targetX, targetY;
     private static final float playerMovementSpeed = 5.0f;
     private static final float enemiesDetectionRadius = 400.0f;
+    private GameDataManager gameDataManager;
+    private boolean isMoving;
 
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
+        gameDataManager = new GameDataManager();
+
         player = new Player(100, 500, 50, 100);
         enemies = new Enemies(2200, 500, 50, 100);
+
+        gameDataManager.LoadGameState(context, player, enemies);
+
         targetX = player.getX();
         targetY = player.getY();
     }
@@ -37,20 +44,26 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        float playerX = player.getX();
-        float playerY = player.getY();
-        float deltaX = targetX - playerX;
-        float deltaY = targetY - playerY;
-        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        if (isMoving) {
+            float playerX = player.getX();
+            float playerY = player.getY();
+            float deltaX = targetX - playerX;
+            float deltaY = targetY - playerY;
+            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-        if (distance > playerMovementSpeed) {
-            float stepX = playerMovementSpeed * (deltaX / distance);
-            float stepY = playerMovementSpeed * (deltaY / distance);
-            player.setX(playerX + stepX);
-            player.setY(playerY + stepY);
-        } else {
+            if (distance > playerMovementSpeed) {
+                float stepX = playerMovementSpeed * (deltaX / distance);
+                float stepY = playerMovementSpeed * (deltaY / distance);
+                player.setX(playerX + stepX);
+                player.setY(playerY + stepY);
+            } else {
+                player.setX(targetX);
+                player.setY(targetY);
+            }
+        }else {
             player.setX(targetX);
             player.setY(targetY);
+            isMoving = false;
         }
 
         enemies.followPlayer(player, enemiesDetectionRadius);
@@ -106,6 +119,7 @@ public class GameView extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_MOVE:
                 targetX = event.getX();
                 targetY = event.getY();
+                isMoving = true;
                 break;
         }
         return true;
@@ -115,6 +129,9 @@ public class GameView extends SurfaceView implements Runnable {
         isPlaying = true;
         gameThread = new Thread(this);
         gameThread.start();
+        gameDataManager.LoadGameState(getContext(), player, enemies);
+        player.setX(player.getX());
+        player.setY(player.getY());
     }
 
     public void pause() {
@@ -124,6 +141,7 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             Log.e("Interrupted", "Interrupted while pausing");      //cleaned up exception to get more receptive feedback
         }
+        gameDataManager.SaveGameState(getContext(), player, enemies);
     }
 
     private void control() {

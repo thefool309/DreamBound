@@ -3,14 +3,14 @@ package com.example.dreambound;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import java.io.Serializable;
 
-public class Enemies extends Character {
+public class Enemies extends Character implements Serializable {
     private static final float enemiesSpeed = 3.0f;
     //constructor
     public Enemies(float x, float y, float _enemiesWidth, float _enemiesHeight)  {
         super(x, y, _enemiesWidth, _enemiesHeight);
-        paint = new Paint();
-        paint.setColor(Color.BLUE);
+        initPaint(Color.BLUE);
     }
 
     //draw
