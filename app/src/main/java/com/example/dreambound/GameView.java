@@ -9,9 +9,12 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
+
 
 public class GameView extends SurfaceView implements Runnable {
-    private static final int CHUNK_SIZE = 16;
+    private static final int CHUNK_SIZE = 64;
     private Thread gameThread;
     private boolean isPlaying;
     private Player player;
@@ -21,16 +24,23 @@ public class GameView extends SurfaceView implements Runnable {
     private static final float playerMovementSpeed = 5.0f;
     private static final float enemiesDetectionRadius = 400.0f;
     private CollisionHandler collisionHandler;
-
+    private GameObject bush1;
 
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
         player = new Player(100, 500, CHUNK_SIZE, CHUNK_SIZE);
         creatureEntity = new CreatureEntity(2200, 500, CHUNK_SIZE, CHUNK_SIZE);
+        bush1 = new GameObject(1000, 500, CHUNK_SIZE, CHUNK_SIZE);
+        ArrayList<CreatureEntity> creatureEntities = new ArrayList<CreatureEntity>();
+        ArrayList<GameObject> collidingEntities = new ArrayList<GameObject>();
+
+        creatureEntities.add(creatureEntity);
+        collidingEntities.add(bush1);
+
         targetX = player.getX();
         targetY = player.getY();
-        collisionHandler = new CollisionHandler(context, player);
+        collisionHandler = new CollisionHandler(context, player, collidingEntities, creatureEntities);
     }
 
     @Override
@@ -61,35 +71,31 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         creatureEntity.followPlayer(player, enemiesDetectionRadius);
-        checkCollisionEnemies(player, creatureEntity);
-        collisionHandler.checkCollisionWithObjects();
+        //checkCollisionEnemies(player, creatureEntity);
+        collisionHandler.HandleCollision();
         checkBoundaries();
     }
 
-
-
-    private void checkCollisionEnemies(Player player, CreatureEntity creatureEntity) {
-        if(checkCollision(player, creatureEntity)){
-            boolean playerWon = false; //bool to keep track of player win/loss
-            //intent to switch activities
-            Intent intent = new Intent(this.getContext(), BattleActivity.class);
-
+    //private void checkCollisionEnemies(Player player, CreatureEntity creatureEntity) {
+    //    if(checkCollision(player, creatureEntity)){
+    //        boolean playerWon = false; //bool to keep track of player win/loss
+    //        //intent to switch activities
+    //        Intent intent = new Intent(this.getContext(), BattleActivity.class);
             //TODO:Implement logic to receive boolean from intent
 
             //TODO:Implement Game Over logic and screen.
+    //        this.getContext().startActivity(intent);
+    //        Log.i("When Worlds Collide", "Collision Detected");
+    //    }
 
-            this.getContext().startActivity(intent);
-            Log.i("When Worlds Collide", "Collision Detected");
-        }
+    //}
 
-    }
-
-    private boolean checkCollision(Character player, Character target) {
-        return player.getX() < target.getX() + target.getWidth() &&
-                player.getX() + player.getWidth() > target.getX() &&
-                player.getY() < target.getY() + target.getHeight() &&
-                player.getY() + player.getHeight() > target.getY();
-    }
+    //private boolean checkCollision(Character player, Character target) {
+    //    return player.getX() < target.getX() + target.getWidth() &&
+    //            player.getX() + player.getWidth() > target.getX() &&
+    //            player.getY() < target.getY() + target.getHeight() &&
+    //            player.getY() + player.getHeight() > target.getY();
+    //}
 
     private void checkBoundaries() {
         if (player.getX() < 0) {
@@ -112,6 +118,7 @@ public class GameView extends SurfaceView implements Runnable {
                 canvas.drawColor(Color.BLACK);
                 player.draw(canvas);
                 creatureEntity.draw(canvas);
+                bush1.draw(canvas);
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
