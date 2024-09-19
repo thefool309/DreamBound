@@ -3,7 +3,7 @@ package com.example.dreambound;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.shapes.Shape;
+
 
 public class GameObject {
 
@@ -61,10 +61,6 @@ public class GameObject {
         return hitbox.height;
     }
 
-    public void draw(Canvas canvas, Paint paint) {
-        canvas.drawRect(hitbox.x, hitbox.y, hitbox.x + hitbox.width, hitbox.y + hitbox.height, paint);
-    }
-
     //set position function
     public void setPosition(float _x, float _y) {
         hitbox.x = _x - hitbox.width / 2;
@@ -72,6 +68,10 @@ public class GameObject {
     }
 
     public void draw(Canvas canvas) {
+        canvas.drawRect(hitbox.x, hitbox.y, hitbox.x + hitbox.width, hitbox.y + hitbox.height, paint);
+    }
+
+    public void draw(Canvas canvas, Paint paint) {
         canvas.drawRect(hitbox.x, hitbox.y, hitbox.x + hitbox.width, hitbox.y + hitbox.height, paint);
     }
 }

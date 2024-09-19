@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CollisionHandler {
-    private static final int CHUNK_SIZE = 64;
 
     Player player;
     Context context = null;
@@ -19,9 +18,9 @@ public class CollisionHandler {
     int gridWidth;
 
     //TODO: Data structure for collide-able entities
-        ArrayList<GameObject> objects = new ArrayList<GameObject>();
+        ArrayList<GameObject> objects;
     //TODO: Data structure for Creature Entities
-         ArrayList<CreatureEntity> creatureEntities = new ArrayList<CreatureEntity>();
+         ArrayList<CreatureEntity> creatureEntities;
     //TODO: Constructor generate our tile maps
     CollisionHandler(Context context, Player player, ArrayList<GameObject> objects, ArrayList<CreatureEntity> creatureEntities) {
         this.context = context;
