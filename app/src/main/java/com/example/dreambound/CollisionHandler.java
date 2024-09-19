@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class CollisionHandler {
 
-    Player player;
     Context context = null;
     int windowHeight;
     int windowWidth;
@@ -19,16 +18,13 @@ public class CollisionHandler {
     //TODO: Data structure for collide-able entities
         ArrayList<GameObject> objects;
     //TODO: Data structure for Creature Entities
-         ArrayList<CreatureEntity> creatureEntities;
     //TODO: Constructor generate our tile maps
-    CollisionHandler(Context context, Player player, ArrayList<GameObject> objects, ArrayList<CreatureEntity> creatureEntities) {
+    CollisionHandler(Context context, ArrayList<GameObject> objects) {
         this.context = context;
-        this.player = player;
         this.objects = objects;
-        this.creatureEntities = creatureEntities;
 
-        gridHeight = windowHeight / 16;
-        gridWidth = windowWidth / 16;
+        gridHeight = (int) (windowHeight / Constants.CHUNK_SIZE);
+        gridWidth = (int) (windowWidth / Constants.CHUNK_SIZE);
         windowHeight = context.getResources().getDisplayMetrics().heightPixels;
         windowWidth = context.getResources().getDisplayMetrics().widthPixels;
     }
@@ -41,50 +37,34 @@ public class CollisionHandler {
     }
 
     void HandleCollision() {
-        checkCollisionWithObjects();
-        checkCollisionWithCreatureEntities();
-        checkCollisionFromCreaturesToObjects();
-    }
-
-    void checkCollisionWithObjects() throws NullPointerException {
-        boolean collision = false;
         for (GameObject object : objects) {
-            collision = checkCollision(player, object);
-            if (collision) {
-                collisionWithObjectEvent();
-            }
-        }
-    }
-
-    private void collisionWithObjectEvent() {
-        Log.i("Collision Detected", "Collision with object event");
-    }
-
-    void checkCollisionWithCreatureEntities() {
-        boolean collision = false;
-        for (CreatureEntity creatureEntity : creatureEntities) {
-            collision = checkCollision(player, creatureEntity);
-            if (collision) {
-                collisionWithCreatureEntitiesEvent();
-            }
-        }
-    }
-
-    void checkCollisionFromCreaturesToObjects() {
-        boolean collision = false;
-        for (CreatureEntity creatureEntity : creatureEntities) {
-            for (GameObject object : objects) {
-                collision = checkCollision(creatureEntity, object);
-                if (collision){
-                    collisionFromCreaturesToObjectsEvent();
+            for (GameObject target : objects) {
+                if (target == object) {
+                    continue;
+                }
+                else if (checkCollision(object, target)) {
+                    if(object.getIsCharacter() || target.getIsCharacter()) {
+                        if(object.getIsPlayer() || target.getIsPlayer()) {
+                            if (object.getIsCreature() || target.getIsCreature()) {
+                                collisionWithCreatureEntitiesEvent();
+                            }
+                            else {
+                                collisionWithObjectEvent();
+                            }
+                        }
+                        else {
+                            collisionFromCreaturesToObjectsEvent();
+                        }
+                    }
                 }
             }
         }
     }
 
-    void collisionWithObjectEvents(GameObject target1, GameObject target2) {
-        //TODO: implement physics logic.
 
+
+    private void collisionWithObjectEvent() {
+        Log.i("Collision Detected", "Collision with object event");
     }
 
     private void collisionWithCreatureEntitiesEvent() {

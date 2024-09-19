@@ -6,9 +6,6 @@ import android.graphics.Paint;
 
 public class GameObject {
 
-
-
-
     public static class Point {
         public float x;
         public float y;
@@ -24,8 +21,7 @@ public class GameObject {
         float width, height;
 
         public Hitbox(float x, float y, float width, float height) {
-            this.position.x = x;
-            this.position.y = y;
+            position = new Point(x, y);
             this.width = width;
             this.height = height;
 
@@ -43,7 +39,7 @@ public class GameObject {
     public boolean isNPC = false;
 
     GameObject(float x, float y, float width, float height) {
-        hitbox = new Hitbox(x, y,width,height);
+        hitbox = new Hitbox(x, y, width, height);
         paint = new Paint();
         paint.setColor(Color.GREEN); //will be switched with a default of transparent
     }
@@ -63,27 +59,27 @@ public class GameObject {
 
     public float getY() { return hitbox.position.y; }
 
-    public boolean isCharacter() { return isCharacter; }
+    public boolean getIsCharacter() { return isCharacter; }
 
     public void setIsCharacter(boolean character) { isCharacter = character; }
 
-    public boolean isNPC() { return isNPC; }
+    public boolean getIsNPC() { return isNPC; }
 
     public void setIsNPC(boolean npc) { isNPC = npc; }
 
-    public boolean isTile() { return isTile; }
+    public boolean getIsTile() { return isTile; }
 
     public void setIsTile(boolean tile) { isTile = tile; }
 
-    public boolean isWalkable() { return isWalkable; }
+    public boolean getIsWalkable() { return isWalkable; }
 
     public void setIsWalkable(boolean walkable) { isWalkable = walkable; }
 
-    public boolean isPlayer() { return isPlayer; }
+    public boolean getIsPlayer() { return isPlayer; }
 
     public void setIsPlayer(boolean player) { isPlayer = player; }
 
-    public boolean isCreature() { return isCreature; }
+    public boolean getIsCreature() { return isCreature; }
 
     public void setIsCreature(boolean creature) { isCreature = creature; }
 
