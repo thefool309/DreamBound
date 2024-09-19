@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class CollisionHandler {
 
-    Context context = null;
+    Context context;
     int windowHeight;
     int windowWidth;
     int gridHeight;
@@ -67,7 +67,7 @@ public class CollisionHandler {
 
 
     private void collisionWithObjectEvent() {
-        Log.i("Collision Detected", "Collision with object event");
+        Log.i("Player Collision Detected", "Collision with object event");
     }
 
     private void collisionWithCreatureEntitiesEvent() {
@@ -82,6 +82,6 @@ public class CollisionHandler {
     }
 
     private void collisionFromCreaturesToObjectsEvent() {
-        Log.i("Collision Detected", "Collision From Creature To Objects event");
+        Log.i("CreatureEntity Collision Detected", "Collision From Creature To Objects event");
     }
 }
