@@ -1,7 +1,6 @@
 package com.example.dreambound;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 
 
 public class GameView extends SurfaceView implements Runnable {
-    private Thread gameThread;
+    private Thread gameThread = new Thread(this);
     private boolean isPlaying;
     private Player player;
     private CreatureEntity creatureEntity;
@@ -24,23 +23,36 @@ public class GameView extends SurfaceView implements Runnable {
     private static final float enemiesDetectionRadius = 400.0f;
 
     private CollisionHandler collisionHandler;
-    private GameObject bush1;
-    private ArrayList<GameObject> collidingEntities = new ArrayList<>();
+    private Obstacle bush1;
+    private Tile walkOnMe1;
+    private Tile walkOnMe2;
+
+    private ArrayList<GameObject> objects = new ArrayList<>();
+    private ArrayList<GameObject> collidables = new ArrayList<>();
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
         player = new Player(100, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
         creatureEntity = new CreatureEntity(2200, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
         bush1 = new Obstacle(1000, 500);
+        walkOnMe1 = new Tile(1000, 400);
+        walkOnMe2 = new Tile(1000, 600);
 
+        objects.add(player);
+        objects.add(creatureEntity);
+        objects.add(bush1);
+        objects.add(walkOnMe1);
+        objects.add(walkOnMe2);
 
-        collidingEntities.add(player);
-        collidingEntities.add(creatureEntity);
-        collidingEntities.add(bush1);
+        for (GameObject object : objects){
+            if (!object.getNoCollision()){
+                collidables.add(object);
+            }
+        }
 
         targetX = player.getX();
         targetY = player.getY();
-        collisionHandler = new CollisionHandler(context, collidingEntities);
+        collisionHandler = new CollisionHandler(context, collidables);
     }
 
     @Override
@@ -95,6 +107,8 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
+                walkOnMe1.draw(canvas);
+                walkOnMe2.draw(canvas);
                 player.draw(canvas);
                 creatureEntity.draw(canvas);
                 bush1.draw(canvas);

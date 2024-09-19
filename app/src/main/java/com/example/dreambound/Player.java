@@ -10,7 +10,7 @@ public class Player extends Character{
     public Player(float _x, float _y, float _playerWidth, float _playerHeight) {
         super(_x, _y, _playerWidth, _playerHeight);
         setIsPlayer(true);
-        setIsWalkable(false);
+        setNoCollision(false);
         paint.setColor(Color.RED);
     }
     //draw

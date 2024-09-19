@@ -10,7 +10,7 @@ public class CreatureEntity extends Character {
     public CreatureEntity(float x, float y, float _enemiesWidth, float _enemiesHeight)  {
         super(x, y, _enemiesWidth, _enemiesHeight);
         setIsCreature(true);
-        setIsWalkable(false);
+        setNoCollision(false);
         paint = new Paint();
         paint.setColor(Color.BLUE);
     }

@@ -16,48 +16,45 @@ public class GameObject {
     }
 
     //member variables
-    public static class Hitbox {
+    public static class RectangleBox {
         Point position;
         float width, height;
 
-        public Hitbox(float x, float y, float width, float height) {
+        public RectangleBox(float x, float y, float width, float height) {
             position = new Point(x, y);
             this.width = width;
             this.height = height;
-
         }
     }
 
-    public Hitbox hitbox;
+    RectangleBox box;
     public Paint paint;
 
     public boolean isTile = false;
-    public boolean isWalkable = true;
+    public boolean noCollision = true;
     public boolean isPlayer = false;
     public boolean isCharacter = false;
     public boolean isCreature = false;
     public boolean isNPC = false;
 
     GameObject(float x, float y, float width, float height) {
-        hitbox = new Hitbox(x, y, width, height);
+        box = new RectangleBox(x, y, width, height);
         paint = new Paint();
-        paint.setColor(Color.GREEN); //will be switched with a default of transparent
+        paint.setColor(Color.WHITE); //will be switched with a default of transparent
     }
 
     //accessors and mutators
     public void setX(float x) {
-        hitbox.position.x = x;
+        box.position.x = x;
     }
 
     public void setY(float y) {
-        hitbox.position.y = y;
+        box.position.y = y;
     }
 
-    public float getX() {
-        return hitbox.position.x;
-    }
+    public float getX() { return box.position.x; }
 
-    public float getY() { return hitbox.position.y; }
+    public float getY() { return box.position.y; }
 
     public boolean getIsCharacter() { return isCharacter; }
 
@@ -71,9 +68,9 @@ public class GameObject {
 
     public void setIsTile(boolean tile) { isTile = tile; }
 
-    public boolean getIsWalkable() { return isWalkable; }
+    public boolean getNoCollision() { return noCollision; }
 
-    public void setIsWalkable(boolean walkable) { isWalkable = walkable; }
+    public void setNoCollision(boolean walkable) { noCollision = walkable; }
 
     public boolean getIsPlayer() { return isPlayer; }
 
@@ -83,34 +80,40 @@ public class GameObject {
 
     public void setIsCreature(boolean creature) { isCreature = creature; }
 
-    public Hitbox getHitbox() {
-        return hitbox;
+    public RectangleBox getBox() {
+        return box;
     }
 
     public float getWidth() {
-        return hitbox.width;
+        return box.width;
     }
 
     public float getHeight() {
-        return hitbox.height;
+        return box.height;
+    }
+
+    //change dimensions function
+    public void changeDimensions(int width, int height) {
+        box.width = width;
+        box.height = height;
     }
 
     //set position functions
     public void setPosition(float _x, float _y) {
-        hitbox.position.x = _x - hitbox.width / 2;
-        hitbox.position.y = _y - hitbox.height / 2;
+        box.position.x = _x - box.width / 2;
+        box.position.y = _y - box.height / 2;
     }
 
     public void setPosition(Point point){
-        hitbox.position = new Point(point.x, point.y);
+        box.position = new Point(point.x, point.y);
     }
     //draw functions
     public void draw(Canvas canvas) {
-        canvas.drawRect(hitbox.position.x, hitbox.position.y, hitbox.position.x + hitbox.width, hitbox.position.y + hitbox.height, paint);
+        canvas.drawRect(box.position.x, box.position.y, box.position.x + box.width, box.position.y + box.height, paint);
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawRect(hitbox.position.x, hitbox.position.y, hitbox.position.x + hitbox.width, hitbox.position.y + hitbox.height, paint);
+        canvas.drawRect(box.position.x, box.position.y, box.position.x + box.width, box.position.y + box.height, paint);
     }
 }
 
