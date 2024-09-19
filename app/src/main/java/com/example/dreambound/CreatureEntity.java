@@ -9,6 +9,8 @@ public class CreatureEntity extends Character {
     //constructor
     public CreatureEntity(float x, float y, float _enemiesWidth, float _enemiesHeight)  {
         super(x, y, _enemiesWidth, _enemiesHeight);
+        setIsCreature(true);
+        setIsWalkable(false);
         paint = new Paint();
         paint.setColor(Color.BLUE);
     }
@@ -16,19 +18,19 @@ public class CreatureEntity extends Character {
     //draw
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawRect(hitbox.x, hitbox.y, hitbox.x + hitbox.width, hitbox.y + hitbox.height, paint);
+        canvas.drawRect(getX(), getY(), getX() + getWidth(), getY() + getHeight(), paint);
     }
     //enemy movement ai
     public void followPlayer(Player player, float detectionRadius) {
-        float deltaX = player.getX() - this.hitbox.x;
-        float deltaY = player.getY() - this.hitbox.y;
+        float deltaX = player.getX() - this.getX();
+        float deltaY = player.getY() - this.getY();
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
         if (distance < detectionRadius) {
             float stepX = enemiesSpeed * (deltaX / distance);
             float stepY = enemiesSpeed * (deltaY / distance);
-            this.hitbox.x += stepX;
-            this.hitbox.y += stepY;
+            this.setX(this.getX() + stepX);
+            this.setY(this.getY() + stepY);
         }
     }
 }
