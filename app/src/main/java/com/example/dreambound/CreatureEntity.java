@@ -16,19 +16,19 @@ public class CreatureEntity extends Character {
     //draw
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawRect(position.x, position.y, position.x + width, position.y + height, paint);
+        canvas.drawRect(hitbox.x, hitbox.y, hitbox.x + hitbox.width, hitbox.y + hitbox.height, paint);
     }
     //enemy movement ai
     public void followPlayer(Player player, float detectionRadius) {
-        float deltaX = player.getX() - this.position.x;
-        float deltaY = player.getY() - this.position.y;
+        float deltaX = player.getX() - this.hitbox.x;
+        float deltaY = player.getY() - this.hitbox.y;
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
         if (distance < detectionRadius) {
             float stepX = enemiesSpeed * (deltaX / distance);
             float stepY = enemiesSpeed * (deltaY / distance);
-            this.position.x += stepX;
-            this.position.y += stepY;
+            this.hitbox.x += stepX;
+            this.hitbox.y += stepY;
         }
     }
 }

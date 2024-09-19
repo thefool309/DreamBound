@@ -14,6 +14,6 @@ public class Player extends Character{
     //draw
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawRect(position.x, position.y, position.x + width, position.y + height, paint);
+        canvas.drawRect(hitbox.x, hitbox.y, hitbox.x + hitbox.width, hitbox.y + hitbox.height, paint);
     }
 }
