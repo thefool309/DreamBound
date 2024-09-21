@@ -8,30 +8,51 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
+
+
 public class GameView extends SurfaceView implements Runnable {
-    private Thread gameThread;
+    private Thread gameThread = new Thread(this);
     private boolean isPlaying;
     private Player player;
-    private Enemies enemies;
+    private CreatureEntity creatureEntity;
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
     private static final float playerMovementSpeed = 5.0f;
     private static final float enemiesDetectionRadius = 400.0f;
-    private GameDataManager gameDataManager;
-    private boolean isMoving;
 
+    private CollisionHandler collisionHandler;
+    private Obstacle bush1;
+    private Tile walkOnMe1;
+    private Tile walkOnMe2;
+
+    private ArrayList<GameObject> objects = new ArrayList<>();
+    private ArrayList<GameObject> collidables = new ArrayList<>();
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
-        gameDataManager = new GameDataManager();
+        player = new Player(100, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
+        creatureEntity = new CreatureEntity(2200, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
+        bush1 = new Obstacle(1000, 500);
+        walkOnMe1 = new Tile(1000, 400);
+        walkOnMe2 = new Tile(1000, 600);
 
-        player = new Player(100, 500, 50, 100);
-        enemies = new Enemies(2200, 500, 50, 100);
+        objects.add(player);
+        objects.add(creatureEntity);
+        objects.add(bush1);
+        objects.add(walkOnMe1);
+        objects.add(walkOnMe2);
 
-        gameDataManager.LoadGameState(context, player, enemies);
+        for (GameObject object : objects){
+            if (!object.getNoCollision()){
+                collidables.add(object);
+            }
+        }
 
         targetX = player.getX();
         targetY = player.getY();
+        collisionHandler = new CollisionHandler(context, collidables);
     }
 
     @Override
@@ -44,46 +65,28 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        if (isMoving) {
-            float playerX = player.getX();
-            float playerY = player.getY();
-            float deltaX = targetX - playerX;
-            float deltaY = targetY - playerY;
-            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        float playerX = player.getX();
+        float playerY = player.getY();
+        float deltaX = targetX - playerX;
+        float deltaY = targetY - playerY;
+        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-            if (distance > playerMovementSpeed) {
-                float stepX = playerMovementSpeed * (deltaX / distance);
-                float stepY = playerMovementSpeed * (deltaY / distance);
-                player.setX(playerX + stepX);
-                player.setY(playerY + stepY);
-            } else {
-                player.setX(targetX);
-                player.setY(targetY);
-            }
-        }else {
+        if (distance > playerMovementSpeed) {
+            float stepX = playerMovementSpeed * (deltaX / distance);
+            float stepY = playerMovementSpeed * (deltaY / distance);
+            player.setX(playerX + stepX);
+            player.setY(playerY + stepY);
+        } else {
             player.setX(targetX);
             player.setY(targetY);
-            isMoving = false;
         }
 
-        enemies.followPlayer(player, enemiesDetectionRadius);
-        checkCollisionEnemies(player, enemies);
+        creatureEntity.followPlayer(player, enemiesDetectionRadius);
+        //checkCollisionEnemies(player, creatureEntity);
+        collisionHandler.HandleCollision();
         checkBoundaries();
     }
 
-    private void checkCollisionEnemies(Player player, Enemies enemies) {
-        if(checkCollision(player, enemies)){
-            Log.i("When Worlds Collide", "Collision Detected");
-        }
-
-    }
-
-    private boolean checkCollision(Character player, Character target) {
-        return player.getX() < target.getX() + target.getWidth() &&
-                player.getX() + player.getWidth() > target.getX() &&
-                player.getY() < target.getY() + target.getHeight() &&
-                player.getY() + player.getHeight() > target.getY();
-    }
 
     private void checkBoundaries() {
         if (player.getX() < 0) {
@@ -104,8 +107,11 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
+                walkOnMe1.draw(canvas);
+                walkOnMe2.draw(canvas);
                 player.draw(canvas);
-                enemies.draw(canvas);
+                creatureEntity.draw(canvas);
+                bush1.draw(canvas);
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
@@ -119,7 +125,6 @@ public class GameView extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_MOVE:
                 targetX = event.getX();
                 targetY = event.getY();
-                isMoving = true;
                 break;
         }
         return true;
@@ -129,9 +134,6 @@ public class GameView extends SurfaceView implements Runnable {
         isPlaying = true;
         gameThread = new Thread(this);
         gameThread.start();
-        gameDataManager.LoadGameState(getContext(), player, enemies);
-        player.setX(player.getX());
-        player.setY(player.getY());
     }
 
     public void pause() {
@@ -141,7 +143,6 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             Log.e("Interrupted", "Interrupted while pausing");      //cleaned up exception to get more receptive feedback
         }
-        gameDataManager.SaveGameState(getContext(), player, enemies);
     }
 
     private void control() {
