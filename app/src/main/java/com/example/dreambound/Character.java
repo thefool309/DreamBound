@@ -1,10 +1,10 @@
 package com.example.dreambound;
 
-import android.graphics.Paint;
+import java.io.Serializable;
 
-public class Character extends GameObject {
+public class Character extends GameObject implements Serializable {
     //Stats class
-    public static class Stats{
+    public static class Stats implements Serializable {
         int Attack = 10;
         int Defense = 10;
         int SpAttack = 10;
@@ -19,11 +19,6 @@ public class Character extends GameObject {
         setIsCharacter(true);
         setNoCollision(false);
         stats = new Stats(); //default character Stats
-    }
-
-    public void initPaint(int color) {
-        paint = new Paint();
-        paint.setColor(color);
     }
 }
 

@@ -30,15 +30,17 @@ public class GameView extends SurfaceView implements Runnable {
 
     private ArrayList<GameObject> objects = new ArrayList<>();
     private ArrayList<GameObject> collidables = new ArrayList<>();
+
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
+        gameDataManager = new GameDataManager();
         player = new Player(100, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
         creatureEntity = new CreatureEntity(2200, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
+        gameDataManager.LoadGameState(context, player, creatureEntity);
         bush1 = new Obstacle(1000, 500);
         walkOnMe1 = new Tile(1000, 400);
         walkOnMe2 = new Tile(1000, 600);
-        gameDataManager = new GameDataManager();
 
         objects.add(player);
         objects.add(creatureEntity);
@@ -51,7 +53,6 @@ public class GameView extends SurfaceView implements Runnable {
                 collidables.add(object);
             }
         }
-        gameDataManager.LoadGameState(context, player, creatureEntity);
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables);
