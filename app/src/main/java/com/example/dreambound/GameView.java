@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import java.util.ArrayList;
 
 
@@ -21,6 +20,8 @@ public class GameView extends SurfaceView implements Runnable {
     private float targetX, targetY;
     private static final float playerMovementSpeed = 5.0f;
     private static final float enemiesDetectionRadius = 400.0f;
+    private GameDataManager gameDataManager;
+    private boolean isMoving;
 
     private CollisionHandler collisionHandler;
     private Obstacle bush1;
@@ -37,6 +38,7 @@ public class GameView extends SurfaceView implements Runnable {
         bush1 = new Obstacle(1000, 500);
         walkOnMe1 = new Tile(1000, 400);
         walkOnMe2 = new Tile(1000, 600);
+        gameDataManager = new GameDataManager();
 
         objects.add(player);
         objects.add(creatureEntity);
@@ -49,7 +51,7 @@ public class GameView extends SurfaceView implements Runnable {
                 collidables.add(object);
             }
         }
-
+        gameDataManager.LoadGameState(context, player, creatureEntity);
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables);
@@ -65,24 +67,29 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        float playerX = player.getX();
-        float playerY = player.getY();
-        float deltaX = targetX - playerX;
-        float deltaY = targetY - playerY;
-        float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        if (isMoving) {
+            float playerX = player.getX();
+            float playerY = player.getY();
+            float deltaX = targetX - playerX;
+            float deltaY = targetY - playerY;
+            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-        if (distance > playerMovementSpeed) {
-            float stepX = playerMovementSpeed * (deltaX / distance);
-            float stepY = playerMovementSpeed * (deltaY / distance);
-            player.setX(playerX + stepX);
-            player.setY(playerY + stepY);
-        } else {
+            if (distance > playerMovementSpeed) {
+                float stepX = playerMovementSpeed * (deltaX / distance);
+                float stepY = playerMovementSpeed * (deltaY / distance);
+                player.setX(playerX + stepX);
+                player.setY(playerY + stepY);
+            } else {
+                player.setX(targetX);
+                player.setY(targetY);
+            }
+        }else {
             player.setX(targetX);
             player.setY(targetY);
+            isMoving = false;
         }
 
         creatureEntity.followPlayer(player, enemiesDetectionRadius);
-        //checkCollisionEnemies(player, creatureEntity);
         collisionHandler.HandleCollision();
         checkBoundaries();
     }
@@ -125,6 +132,7 @@ public class GameView extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_MOVE:
                 targetX = event.getX();
                 targetY = event.getY();
+                isMoving = true;
                 break;
         }
         return true;
@@ -134,6 +142,9 @@ public class GameView extends SurfaceView implements Runnable {
         isPlaying = true;
         gameThread = new Thread(this);
         gameThread.start();
+        gameDataManager.LoadGameState(getContext(), player, creatureEntity);
+        player.setX(player.getX());
+        player.setY(player.getY());
     }
 
     public void pause() {
@@ -143,6 +154,7 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             Log.e("Interrupted", "Interrupted while pausing");      //cleaned up exception to get more receptive feedback
         }
+        gameDataManager.SaveGameState(getContext(), player, creatureEntity);
     }
 
     private void control() {
