@@ -17,7 +17,7 @@ public class Character extends GameObject implements Serializable {
     Character(float x, float y, float width, float height) {
         super(x, y, width, height);
         setIsCharacter(true);
-        setNoCollision(false);
+        setHasCollision(true);
         stats = new Stats(); //default character Stats
     }
 }

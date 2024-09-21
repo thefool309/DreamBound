@@ -1,7 +1,6 @@
 package com.example.dreambound;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 
@@ -16,12 +15,14 @@ public class CollisionHandler {
     int gridWidth;
 
     //TODO: Data structure for collide-able entities
+        ArrayList<GameObject> collideables;
+    //TODO: Data structure for static objects
         ArrayList<GameObject> objects;
-    //TODO: Data structure for Creature Entities
     //TODO: Constructor generate our tile maps
-    CollisionHandler(Context context, ArrayList<GameObject> objects) {
+    CollisionHandler(Context context, ArrayList<GameObject> collideables, ArrayList<GameObject> staticObjects) {
         this.context = context;
-        this.objects = objects;
+        this.objects = staticObjects;
+        this.collideables = collideables;
 
         gridHeight = (int) (windowHeight / Constants.CHUNK_SIZE);
         gridWidth = (int) (windowWidth / Constants.CHUNK_SIZE);
@@ -37,28 +38,32 @@ public class CollisionHandler {
     }
 
     void HandleCollision() {
-        for (GameObject object : objects) {
+        for (GameObject object : collideables) {
             for (GameObject target : objects) {
-                if (target == object) {
-                    continue;
-                }
-                else if (target.getNoCollision() || object.getNoCollision()) {
+                if (!target.getHasCollision() || !object.getHasCollision()) {
                     continue;
                 }
                 else if (checkCollision(object, target)) {
-                    if(object.getIsCharacter() || target.getIsCharacter()) {
-                        if(object.getIsPlayer() || target.getIsPlayer()) {
-                            if (object.getIsCreature() || target.getIsCreature()) {
-                                collisionWithCreatureEntitiesEvent();
-                            }
-                            else {
-                                collisionWithObjectEvent();
-                            }
-                        }
-                        else {
-                            collisionFromCreaturesToObjectsEvent();
-                        }
+                    if(object.getIsPlayer() || target.getIsPlayer()) {
+                        collisionWithObjectEvent();
                     }
+                    else {
+                        collisionFromCreaturesToObjectsEvent();
+                    }
+
+                }
+            }
+        }
+        for (GameObject object : collideables) {
+            for (GameObject target : collideables) {
+                if (target == object) {
+                    continue;
+                }
+                if (!target.getHasCollision() || !object.getHasCollision()) {
+                    continue;
+                }
+                else if (checkCollision(object, target)) {
+                    collisionWithCreatureEntitiesEvent();
                 }
             }
         }

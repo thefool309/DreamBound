@@ -11,6 +11,7 @@ public class Player extends Character implements Serializable {
         super(_x, _y, _playerWidth, _playerHeight);
         setIsPlayer(true);
         initPaint(Color.RED);
+        setCanMove(true);
     }
     //draw
     public void draw(Canvas canvas) {

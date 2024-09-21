@@ -37,11 +37,12 @@ public class GameObject implements Serializable {
     }
 
     public boolean isTile = false;
-    public boolean noCollision = true;
+    public boolean hasCollision = false;
     public boolean isPlayer = false;
     public boolean isCharacter = false;
     public boolean isCreature = false;
     public boolean isNPC = false;
+    public boolean canMove = false;
 
     GameObject(float x, float y, float width, float height) {
         box = new RectangleBox(x, y, width, height);
@@ -73,9 +74,15 @@ public class GameObject implements Serializable {
 
     public void setIsTile(boolean tile) { isTile = tile; }
 
-    public boolean getNoCollision() { return noCollision; }
+    public void setCanMove(boolean canMove) { this.canMove = canMove; }
 
-    public void setNoCollision(boolean walkable) { noCollision = walkable; }
+    public boolean getCanMove() { return canMove; }
+
+    public boolean getHasCollision() { return hasCollision; }
+
+    public void setHasCollision() { setHasCollision(true); }
+
+    public void setHasCollision(boolean hasCollision) { this.hasCollision = hasCollision; }
 
     public boolean getIsPlayer() { return isPlayer; }
 

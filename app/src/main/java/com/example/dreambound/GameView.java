@@ -30,7 +30,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private ArrayList<GameObject> objects = new ArrayList<>();
     private ArrayList<GameObject> collidables = new ArrayList<>();
-
+    private ArrayList<GameObject> staticObjects = new ArrayList<>();
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
@@ -49,13 +49,16 @@ public class GameView extends SurfaceView implements Runnable {
         objects.add(walkOnMe2);
 
         for (GameObject object : objects){
-            if (!object.getNoCollision()){
+            if (object.getHasCollision() && object.getCanMove()){
                 collidables.add(object);
+            }
+            else if (object.getHasCollision() && !object.getCanMove()){
+                staticObjects.add(object);
             }
         }
         targetX = player.getX();
         targetY = player.getY();
-        collisionHandler = new CollisionHandler(context, collidables);
+        collisionHandler = new CollisionHandler(context, collidables, staticObjects);
     }
 
     @Override
