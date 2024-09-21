@@ -6,7 +6,7 @@ import android.util.Log;
 import java.io.*;
 
 public class GameDataManager {
-    private static final String FILE_NAME = "game_state.dat";
+    private static final String FILE_NAME = "gameState.dat";
 
     public void SaveGameState(Context context, Player player, CreatureEntity enemy) {
         try {
@@ -21,7 +21,7 @@ public class GameDataManager {
             fos.close();
             Log.d("GameDataManager", "Saved game state!");
         } catch (Exception e) {
-            Log.d("GameDataManager", "Saving game state failed!");
+            Log.d("GameDataManager", "Saving game state failed!" + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -47,7 +47,7 @@ public class GameDataManager {
                 fis.close();
                 Log.d("GameDataManager", "Loaded game state!");
             } catch (Exception e) {
-                Log.d("GameDataManager", "Loading game state failed!");
+                Log.d("GameDataManager", "Loading game state failed!" + e.getMessage());
                 e.printStackTrace();
             }
         }else {

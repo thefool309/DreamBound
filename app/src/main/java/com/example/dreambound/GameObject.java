@@ -3,10 +3,11 @@ package com.example.dreambound;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import java.io.Serializable;
 
-public class GameObject {
+public class GameObject implements Serializable {
 
-    public static class Point {
+    public static class Point implements Serializable {
         public float x;
         public float y;
         public Point(float x, float y) {
@@ -16,7 +17,7 @@ public class GameObject {
     }
 
     //member variables
-    public static class RectangleBox {
+    public static class RectangleBox implements Serializable {
         Point position;
         float width, height;
 
@@ -28,7 +29,12 @@ public class GameObject {
     }
 
     RectangleBox box;
-    public Paint paint;
+    transient Paint paint;
+
+    public void initPaint(int color) {
+        paint = new Paint();
+        paint.setColor(color);
+    }
 
     public boolean isTile = false;
     public boolean noCollision = true;
@@ -39,8 +45,7 @@ public class GameObject {
 
     GameObject(float x, float y, float width, float height) {
         box = new RectangleBox(x, y, width, height);
-        paint = new Paint();
-        paint.setColor(Color.WHITE); //will be switched with a default of transparent
+        initPaint(Color.WHITE); //will be switched with a default of transparent
     }
 
     //accessors and mutators
