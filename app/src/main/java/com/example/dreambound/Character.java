@@ -1,5 +1,7 @@
 package com.example.dreambound;
 
+import android.graphics.Paint;
+
 public class Character extends GameObject {
     //Stats class
     public static class Stats{
@@ -15,10 +17,14 @@ public class Character extends GameObject {
     Character(float x, float y, float width, float height) {
         super(x, y, width, height);
         setIsCharacter(true);
+        setNoCollision(false);
         stats = new Stats(); //default character Stats
     }
 
-
+    public void initPaint(int color) {
+        paint = new Paint();
+        paint.setColor(color);
+    }
 }
 
 
