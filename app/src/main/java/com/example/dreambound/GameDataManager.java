@@ -8,7 +8,7 @@ import java.io.*;
 public class GameDataManager {
     private static final String FILE_NAME = "game_state.dat";
 
-    public void SaveGameState(Context context, Player player, Enemies enemy) {
+    public void SaveGameState(Context context, Player player, CreatureEntity enemy) {
         try {
             Log.d("GameDataManager", "Saving game state...");
             FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
@@ -26,7 +26,7 @@ public class GameDataManager {
         }
     }
 
-    public void LoadGameState(Context context, Player player, Enemies enemy) {
+    public void LoadGameState(Context context, Player player, CreatureEntity enemy) {
         File file = context.getFileStreamPath(FILE_NAME);
         if (file.exists()) {
             try {
@@ -35,7 +35,7 @@ public class GameDataManager {
                 ObjectInputStream ois = new ObjectInputStream(fis);
 
                 Player savedPlayer = (Player) ois.readObject();
-                Enemies savedEnemy = (Enemies) ois.readObject();
+                CreatureEntity savedEnemy = (CreatureEntity) ois.readObject();
 
                 player.setPosition(savedPlayer.getX(), savedPlayer.getY());
                 enemy.setPosition(savedEnemy.getX(), savedEnemy.getY());
