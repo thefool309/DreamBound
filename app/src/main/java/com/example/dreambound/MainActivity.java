@@ -1,5 +1,6 @@
 package com.example.dreambound;
 
+import android.annotation.SuppressLint;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
+
 
     // Player and Enemy stats
     private int playerHealth = 100;
@@ -23,10 +26,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView enemyHealthText;
     private TextView battleLogText;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // Bind UI Elements
         playerHealthText = findViewById(R.id.player_health);

@@ -11,7 +11,6 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-
     <EditText
             android:layout_width="125pt"
             android:layout_height="25pt"
@@ -37,40 +36,30 @@
             android:inputType="textPassword"
             android:layout_marginTop="150dp"
             android:gravity="center"/>
+
+    <EditText
+            android:layout_width="125pt"
+            android:layout_height="25pt"
+            android:autofillHints="" android:hint="@string/confirm_password"
+            android:textColor="@color/black"
+            android:textColorHint="#8c8c8c"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:background="@drawable/rounded_corner"
+            android:inputType="textPassword"
+            android:layout_marginTop="210dp"
+            android:gravity="center"/>
+
     <Button
             android:layout_width="125pt"
             android:layout_height="25pt"
-            android:layout_marginTop="215dp"
+            android:layout_marginTop="270dp"
             android:gravity="center"
             android:background="@drawable/button_shape"
-            android:text="@string/login"
+            android:text="@string/register"
             android:textColor="#ffb6c1"
             android:textSize="20sp"
-            android:id="@+id/log_in_button"
-    />
-    <Button
-            android:layout_width="50pt"
-            android:layout_height="25pt"
-            android:layout_marginTop="295dp"
-            android:gravity="center"
-            android:background="@drawable/small_button_shape"
-            android:text="@string/forgot_password"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:id="@+id/forgot_password_button"
-    />
-
-    <Button
-            android:layout_width="50pt"
-            android:layout_height="25pt"
-            android:layout_marginStart="163dp"
-            android:layout_marginTop="295dp"
-            android:gravity="center"
-            android:background="@drawable/small_button_shape"
-            android:text="@string/create_account"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:id="@+id/createAccount"
+            android:id="@+id/register_button"
     />
 
 
