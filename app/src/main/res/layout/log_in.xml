@@ -55,7 +55,7 @@
             android:gravity="center"
             android:background="@drawable/small_button_shape"
             android:text="@string/forgot_password"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:id="@+id/forgot_password_button"
     />
@@ -68,7 +68,7 @@
             android:gravity="center"
             android:background="@drawable/small_button_shape"
             android:text="@string/create_account"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:id="@+id/create_account"
     />
