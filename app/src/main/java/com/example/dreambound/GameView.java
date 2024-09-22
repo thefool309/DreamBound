@@ -3,6 +3,7 @@ package com.example.dreambound;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -19,6 +20,8 @@ public class GameView extends SurfaceView implements Runnable {
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
     private static final float enemiesDetectionRadius = 400.0f;
+
+    private long startTime, loopTime;
 
     private GameDataManager gameDataManager;
     private boolean isMoving;
@@ -82,6 +85,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update() {
         if (isMoving) {
+            startTime = SystemClock.uptimeMillis();
             float playerX = player.getX();
             float playerY = player.getY();
             float deltaX = targetX - playerX;
@@ -174,10 +178,14 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void control() {
-        try {
-            Thread.sleep(17);
-        } catch (InterruptedException e) {
-            Log.e("Interrupted", "Interrupted while sleeping");    //cleaned up exception to get more receptive feedback
+        loopTime = SystemClock.uptimeMillis() - startTime;
+        //pausing here to make sure we update the right number of times per second
+        if (loopTime < Constants.DELAY) {
+            try {
+                Thread.sleep(Constants.DELAY - loopTime);
+            } catch (InterruptedException e) {
+                Log.e("Interrupted", "Interrupted while sleeping");
+            }
         }
     }
 }
