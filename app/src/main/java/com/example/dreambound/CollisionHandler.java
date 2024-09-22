@@ -48,7 +48,7 @@ public class CollisionHandler {
                         collisionWithObjectEvent();
                     }
                     else {
-                        collisionFromCreaturesToObjectsEvent();
+                        collisionFromCreaturesToNonPlayer();
                     }
 
                 }
@@ -63,7 +63,12 @@ public class CollisionHandler {
                     continue;
                 }
                 else if (checkCollision(object, target)) {
-                    collisionWithCreatureEntitiesEvent();
+                    if (object.getIsPlayer() || target.getIsPlayer()) {
+                        collisionWithCreatureEntitiesEvent();
+                    }
+                    else {
+                        collisionFromCreaturesToNonPlayer();
+                    }
                 }
             }
         }
@@ -86,7 +91,7 @@ public class CollisionHandler {
         Log.i("Collision Detected", "Collision with Creature event");
     }
 
-    private void collisionFromCreaturesToObjectsEvent() {
-        Log.i("CreatureEntity Collision Detected", "Collision From Creature To Objects event");
+    private void collisionFromCreaturesToNonPlayer() {
+        Log.i("CreatureEntity Collision Detected", "Collision From Creature To Non-Player event");
     }
 }

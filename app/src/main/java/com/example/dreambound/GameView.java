@@ -19,28 +19,32 @@ public class GameView extends SurfaceView implements Runnable {
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
     private static final float enemiesDetectionRadius = 400.0f;
+
     private GameDataManager gameDataManager;
     private boolean isMoving;
+
+    GameEngine gameEngine;
 
     private CollisionHandler collisionHandler;
     private Obstacle bush1;
     private Tile walkOnMe1;
     private Tile walkOnMe2;
 
-    private ArrayList<GameObject> objects = new ArrayList<>();
+    private ArrayList<CreatureEntity> creatures = new ArrayList<>();
     private ArrayList<GameObject> collidables = new ArrayList<>();
     private ArrayList<GameObject> staticObjects = new ArrayList<>();
+    private ArrayList<GameObject> allObjects = new ArrayList<>();
+
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
+        //start engine
+        if (gameEngine == null) {
+            startEngineAndPullData();
+        }
         //load game if there is one
         gameDataManager = new GameDataManager();
-        gameDataManager.LoadGameState(context, player, creatureEntity);
-        //create objects
-        this.createObjects();
-        //loadObjects
-        this.loadObjects();
-
+        gameDataManager.LoadGameState(context, player, creatures);
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables, staticObjects);
@@ -55,6 +59,17 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    private void startEngineAndPullData(){
+        if (gameEngine == null) {
+            gameEngine = new GameEngine();
+            creatures = gameEngine.getCreaturesLoadedIn();
+            staticObjects = gameEngine.getStaticObjects();
+            allObjects = gameEngine.getAllObjects();
+            collidables = gameEngine.getCollisionObjects();
+            player = gameEngine.getPlayer();
+        }
+    }
+
     private void createObjects() {
         player = new Player(100, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
         creatureEntity = new CreatureEntity(2200, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
@@ -63,22 +78,7 @@ public class GameView extends SurfaceView implements Runnable {
         walkOnMe2 = new Tile(1000, 600);
     }
 
-    private void loadObjects() {
-        objects.add(player);
-        objects.add(creatureEntity);
-        objects.add(bush1);
-        objects.add(walkOnMe1);
-        objects.add(walkOnMe2);
 
-        for (GameObject object : objects){
-            if (object.getHasCollision() && object.getCanMove()){
-                collidables.add(object);
-            }
-            else if (object.getHasCollision() && !object.getCanMove()){
-                staticObjects.add(object);
-            }
-        }
-    }
 
     private void update() {
         if (isMoving) {
@@ -103,7 +103,9 @@ public class GameView extends SurfaceView implements Runnable {
             isMoving = false;
         }
 
-        creatureEntity.followPlayer(player);
+        for (CreatureEntity entity: creatures) {
+            entity.followPlayer(player);
+        }
         collisionHandler.HandleCollision();
         checkBoundaries();
     }
@@ -128,11 +130,11 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
-                walkOnMe1.draw(canvas);
-                walkOnMe2.draw(canvas);
-                player.draw(canvas);
-                creatureEntity.draw(canvas);
-                bush1.draw(canvas);
+
+
+                for (GameObject object : allObjects){
+                    object.draw(canvas);
+                }
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
@@ -156,7 +158,7 @@ public class GameView extends SurfaceView implements Runnable {
         isPlaying = true;
         gameThread = new Thread(this);
         gameThread.start();
-        gameDataManager.LoadGameState(getContext(), player, creatureEntity);
+        gameDataManager.LoadGameState(getContext(), player, creatures);
         player.setX(player.getX());
         player.setY(player.getY());
     }
@@ -168,7 +170,7 @@ public class GameView extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             Log.e("Interrupted", "Interrupted while pausing");      //cleaned up exception to get more receptive feedback
         }
-        gameDataManager.SaveGameState(getContext(), player, creatureEntity);
+        gameDataManager.SaveGameState(getContext(), player, creatures);
     }
 
     private void control() {

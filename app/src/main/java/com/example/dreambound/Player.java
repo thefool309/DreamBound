@@ -11,7 +11,7 @@ public class Player extends gameCharacter implements Serializable {
         super(_x, _y, _playerWidth, _playerHeight);
         setIsPlayer(true);
         initPaint(Color.RED);
-        setCanMove(true);
+        setCanMove();
     }
     //accessors and mutators
     public void setPlayerMovementSpeed(float _playerMovementSpeed) {
@@ -23,6 +23,7 @@ public class Player extends gameCharacter implements Serializable {
     }
 
     //draw
+    @Override
     public void draw(Canvas canvas) {
         canvas.drawRect(getX(), getY(), getX() + getWidth(), getY() + getHeight(), paint);
     }

@@ -1,8 +1,8 @@
-import com.example.dreambound.*;
+package com.example.dreambound;
 
 import java.util.ArrayList;
 
-public class gameEngine {
+public class GameEngine {
     private Player player;
     private ArrayList<CreatureEntity> creaturesLoadedIn = new ArrayList();
     private ArrayList<Obstacle> obstacles = new ArrayList();
@@ -11,7 +11,7 @@ public class gameEngine {
     private ArrayList<GameObject> staticObjects = new ArrayList<>();
 
 
-    public gameEngine() {
+    public GameEngine() {
         createObjects();
     }
 

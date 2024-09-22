@@ -4,18 +4,28 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import java.io.*;
+import java.util.ArrayList;
 
 public class GameDataManager {
     private static final String FILE_NAME = "gameState.dat";
 
-    public void SaveGameState(Context context, Player player, CreatureEntity enemy) {
+    public void LoadMapData(){
+
+    }
+
+    public void SaveMapData(){
+
+    }
+
+
+    public void SaveGameState(Context context, Player player, ArrayList<CreatureEntity> entities) {
         try {
             Log.d("GameDataManager", "Saving game state...");
             FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             oos.writeObject(player);
-            oos.writeObject(enemy);
+            oos.writeObject(entities);
 
             oos.close();
             fos.close();
@@ -26,7 +36,7 @@ public class GameDataManager {
         }
     }
 
-    public void LoadGameState(Context context, Player player, CreatureEntity enemy) {
+    public void LoadGameState(Context context, Player player, ArrayList<CreatureEntity> entities) {
         File file = context.getFileStreamPath(FILE_NAME);
         if (file.exists()) {
             try {
@@ -35,14 +45,15 @@ public class GameDataManager {
                 ObjectInputStream ois = new ObjectInputStream(fis);
 
                 Player savedPlayer = (Player) ois.readObject();
-                CreatureEntity savedEnemy = (CreatureEntity) ois.readObject();
+                ArrayList<CreatureEntity> savedEntities;
+                savedEntities = (ArrayList<CreatureEntity>) ois.readObject();
 
                 player.setPosition(savedPlayer.getX(), savedPlayer.getY());
-                enemy.setPosition(savedEnemy.getX(), savedEnemy.getY());
-
                 player.initPaint(Color.RED);
-                enemy.initPaint(Color.BLUE);
-
+                for (int i = 0; i < savedEntities.size(); i++) {
+                    entities.get(i).setPosition(savedEntities.get(i).getX(), savedEntities.get(i).getY());
+                    entities.get(i).initPaint(Color.BLUE);
+                }
                 ois.close();
                 fis.close();
                 Log.d("GameDataManager", "Loaded game state!");
