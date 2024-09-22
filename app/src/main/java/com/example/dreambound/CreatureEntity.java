@@ -4,8 +4,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import java.io.Serializable;
 
-public class CreatureEntity extends Character implements Serializable {
-    private static final float enemiesSpeed = 3.0f;
+public class CreatureEntity extends gameCharacter implements Serializable {
+    private  float creatureEntitySpeed = 3.0f;
+    private float creatureEntityDetectionRadius = 400.0f;
     //constructor
     public CreatureEntity(float x, float y, float _enemiesWidth, float _enemiesHeight)  {
         super(x, y, _enemiesWidth, _enemiesHeight);
@@ -20,15 +21,26 @@ public class CreatureEntity extends Character implements Serializable {
     public void draw(Canvas canvas) {
         canvas.drawRect(getX(), getY(), getX() + getWidth(), getY() + getHeight(), paint);
     }
+
+    //accessors and mutators
+
+    public float getCreatureEntitySpeed() { return creatureEntitySpeed; }
+
+    public void setCreatureEntitySpeed(float speed) { creatureEntitySpeed = speed; }
+
+    public float getCreatureEntityDetectionRadius() { return creatureEntityDetectionRadius; }
+
+    public void setCreatureEntityDetectionRadius(float creatureEntityDetectionRadius) { this.creatureEntityDetectionRadius = creatureEntityDetectionRadius; }
+
     //enemy movement ai
-    public void followPlayer(Player player, float detectionRadius) {
+    public void followPlayer(Player player) {
         float deltaX = player.getX() - this.getX();
         float deltaY = player.getY() - this.getY();
         float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-        if (distance < detectionRadius) {
-            float stepX = enemiesSpeed * (deltaX / distance);
-            float stepY = enemiesSpeed * (deltaY / distance);
+        if (distance < creatureEntityDetectionRadius) {
+            float stepX = creatureEntitySpeed * (deltaX / distance);
+            float stepY = creatureEntitySpeed * (deltaY / distance);
             this.setX(this.getX() + stepX);
             this.setY(this.getY() + stepY);
         }

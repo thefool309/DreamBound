@@ -18,7 +18,6 @@ public class GameView extends SurfaceView implements Runnable {
     private CreatureEntity creatureEntity;
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
-    private static final float playerMovementSpeed = 5.0f;
     private static final float enemiesDetectionRadius = 400.0f;
     private GameDataManager gameDataManager;
     private boolean isMoving;
@@ -34,28 +33,14 @@ public class GameView extends SurfaceView implements Runnable {
     public GameView(Context context) {
         super(context);
         surfaceHolder = getHolder();
+        //load game if there is one
         gameDataManager = new GameDataManager();
-        player = new Player(100, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
-        creatureEntity = new CreatureEntity(2200, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
         gameDataManager.LoadGameState(context, player, creatureEntity);
-        bush1 = new Obstacle(1000, 500);
-        walkOnMe1 = new Tile(1000, 400);
-        walkOnMe2 = new Tile(1000, 600);
+        //create objects
+        this.createObjects();
+        //loadObjects
+        this.loadObjects();
 
-        objects.add(player);
-        objects.add(creatureEntity);
-        objects.add(bush1);
-        objects.add(walkOnMe1);
-        objects.add(walkOnMe2);
-
-        for (GameObject object : objects){
-            if (object.getHasCollision() && object.getCanMove()){
-                collidables.add(object);
-            }
-            else if (object.getHasCollision() && !object.getCanMove()){
-                staticObjects.add(object);
-            }
-        }
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables, staticObjects);
@@ -70,6 +55,31 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    private void createObjects() {
+        player = new Player(100, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
+        creatureEntity = new CreatureEntity(2200, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
+        bush1 = new Obstacle(1000, 500);
+        walkOnMe1 = new Tile(1000, 400);
+        walkOnMe2 = new Tile(1000, 600);
+    }
+
+    private void loadObjects() {
+        objects.add(player);
+        objects.add(creatureEntity);
+        objects.add(bush1);
+        objects.add(walkOnMe1);
+        objects.add(walkOnMe2);
+
+        for (GameObject object : objects){
+            if (object.getHasCollision() && object.getCanMove()){
+                collidables.add(object);
+            }
+            else if (object.getHasCollision() && !object.getCanMove()){
+                staticObjects.add(object);
+            }
+        }
+    }
+
     private void update() {
         if (isMoving) {
             float playerX = player.getX();
@@ -78,9 +88,9 @@ public class GameView extends SurfaceView implements Runnable {
             float deltaY = targetY - playerY;
             float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-            if (distance > playerMovementSpeed) {
-                float stepX = playerMovementSpeed * (deltaX / distance);
-                float stepY = playerMovementSpeed * (deltaY / distance);
+            if (distance > player.getPlayerMovementSpeed()) {
+                float stepX = player.getPlayerMovementSpeed() * (deltaX / distance);
+                float stepY = player.getPlayerMovementSpeed() * (deltaY / distance);
                 player.setX(playerX + stepX);
                 player.setY(playerY + stepY);
             } else {
@@ -93,7 +103,7 @@ public class GameView extends SurfaceView implements Runnable {
             isMoving = false;
         }
 
-        creatureEntity.followPlayer(player, enemiesDetectionRadius);
+        creatureEntity.followPlayer(player);
         collisionHandler.HandleCollision();
         checkBoundaries();
     }

@@ -2,7 +2,7 @@ package com.example.dreambound;
 
 import java.io.Serializable;
 
-public class Character extends GameObject implements Serializable {
+public class gameCharacter extends GameObject implements Serializable {
     //Stats class
     public static class Stats implements Serializable {
         int Attack = 10;
@@ -14,7 +14,7 @@ public class Character extends GameObject implements Serializable {
     //stats variable
     Stats stats;
     //Constructor
-    Character(float x, float y, float width, float height) {
+    gameCharacter(float x, float y, float width, float height) {
         super(x, y, width, height);
         setIsCharacter(true);
         setHasCollision(true);
