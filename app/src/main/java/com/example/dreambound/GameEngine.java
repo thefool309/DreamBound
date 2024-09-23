@@ -1,6 +1,8 @@
 package com.example.dreambound;
 
 import java.util.ArrayList;
+import davidiserovich.TMXLoader.*;
+import android.graphics.Bitmap;
 
 public class GameEngine {
     private Player player;
@@ -10,14 +12,12 @@ public class GameEngine {
     private ArrayList<GameObject> allObjects = new ArrayList<>();
     private ArrayList<GameObject> staticObjects = new ArrayList<>();
 
-
     public GameEngine() {
         createObjects();
     }
 
     public Player getPlayer() { return player; }
     public void setPlayer(Player player) { this.player = player; }
-
 
     public ArrayList<GameObject> getAllObjects() { return allObjects; }
     public void setAllObjects(ArrayList<GameObject> allObjects) { this.allObjects = allObjects; }
