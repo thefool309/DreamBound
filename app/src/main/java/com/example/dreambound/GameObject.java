@@ -74,7 +74,7 @@ public class GameObject implements Serializable {
 
     public void setIsTile(boolean tile) { isTile = tile; }
 
-    public void setCanMove() { canMove = true; };
+    public void setCanMove() { canMove = true; }
 
     public void setCanMove(boolean canMove) { this.canMove = canMove; }
 
