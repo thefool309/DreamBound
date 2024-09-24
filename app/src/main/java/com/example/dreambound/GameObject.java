@@ -4,9 +4,27 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import java.io.Serializable;
+import java.util.ArrayList;
+
+
+
+enum BoxTag {
+    PaintBox(31),
+    HitBox(32);
+
+    private final int ID;
+
+    BoxTag(int id) {
+        ID = id;
+    }
+
+    public int getID() {
+        return ID;
+    }
+}
 
 public class GameObject implements Serializable {
-
+    //nested classes
     public static class Point implements Serializable {
         public float x;
         public float y;
@@ -16,18 +34,48 @@ public class GameObject implements Serializable {
         }
     }
 
-    //member variables
+    public static class Line implements Serializable {
+        public Point pointA;
+        public Point pointB;
+
+        public Line(Point pointA, Point pointB) {
+            this.pointA = pointA;
+            this.pointB = pointB;
+        }
+        public Line(float x1, float y1, float x2, float y2) {
+            this.pointA = new Point(x1, y1);
+            this.pointB = new Point(x2, y2);
+        }
+
+        public Point getStartPoint(){
+            return pointA;
+        }
+        public Point getEndPoint() {
+            return pointB;
+        }
+    }
+
     public static class RectangleBox implements Serializable {
-        Point position;
-        float width, height;
+        public Point position;
+        public float width, height;
+
+        ArrayList<Point> vertices = new ArrayList<>();
 
         public RectangleBox(float x, float y, float width, float height) {
             position = new Point(x, y);
             this.width = width;
             this.height = height;
+            generateVertices();
+        }
+
+        private void generateVertices(){
+            vertices.add(new Point(position.x, position.y));
+            vertices.add(new Point(position.x + width, position.y));
+            vertices.add(new Point(position.x + width, position.y + height));
+            vertices.add(new Point(position.x, position.y + height));
         }
     }
-
+    //member variables
     RectangleBox box;
     transient Paint paint;
 
