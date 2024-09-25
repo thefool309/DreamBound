@@ -50,12 +50,18 @@ public class DreamMapData {
         int width, height;
 
         String group;
+        HashMap<String, String> properties;
     }
 
+    static class DreamObjectLayer{
+        public String name;
+        int index;
+        ArrayList<DreamTMXObject> objects;
+    }
 
     public long  getGIDAtLayer(int x, int y, int layerIndex) {
 
-        return ((layers.get(layerIndex).tiles[y][x]));
+        return ((tileLayers.get(layerIndex).tiles[y][x]));
     }
 
     public Long getLocalID(long GID){
@@ -85,19 +91,43 @@ public class DreamMapData {
         return tileSetIndex;
     }
 
+    public Integer getTileSetIndex(String name){
+        Integer tileSetIndex = null; //returns null for error checking
+
+        for(int i = tilesets.size() - 1; i >= 0; i--) {
+            if(tilesets.get(i).name.equals(name)){
+                tileSetIndex = i;
+                break;
+            }
+        }
+        return tileSetIndex;
+    }
+
+    public Integer getLayerIndex(String name){
+        Integer layerIndex = null; //returns null for error checking
+        for(int i = 0; i < tileLayers.size(); i++) {
+            if(tileLayers.get(i).name.equals(name)){
+                layerIndex = i;
+            }
+        }
+        return layerIndex;
+    }
+
     public String name;
     public int	height, width;
     public int	tilewidth, tileheight;
-    public String orientation; // Must be "orthogonal", for now.
+    public String orientation; // Must be "orthogonal", per David.
 
     public ArrayList<DreamTileSet> tilesets; // <tileset.name, tileset>
     public ArrayList<DreamTMXObject> objects; // We can search by several parameters (not just name) so a linear search is probably best
-    public ArrayList<DreamLayer> layers;
+    public ArrayList<DreamLayer> tileLayers;
+    public ArrayList<DreamObjectLayer> objectLayers;
 
     public DreamMapData(){
         tilesets = new ArrayList<DreamTileSet>();
         objects = new ArrayList<DreamTMXObject>();
-        layers = new ArrayList<DreamLayer>();
+        tileLayers = new ArrayList<DreamLayer>();
+        objectLayers = new ArrayList<DreamObjectLayer>();
     }
 
 }
