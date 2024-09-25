@@ -33,6 +33,8 @@ public class DreamMapData {
     static class DreamLayer {
         public String name;
 
+        //tiles are not stored as objects for the sake of memory efficiency
+
         public long[][] tiles;
 
         public int width, height;
@@ -50,6 +52,7 @@ public class DreamMapData {
         String group;
     }
 
+
     public long  getGIDAtLayer(int x, int y, int layerIndex) {
 
         return ((layers.get(layerIndex).tiles[y][x]));
@@ -61,7 +64,7 @@ public class DreamMapData {
         for (int i = tilesets.size() - 1; i >= 0; i--) {
             currentFirstGID = tilesets.get(i).firstGID;
             if (currentFirstGID <= GID) {
-                localId = new Long(GID - currentFirstGID);
+                localId = GID - currentFirstGID;
             }
         }
 
