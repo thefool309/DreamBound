@@ -22,7 +22,6 @@ public class GameView extends SurfaceView implements Runnable {
     private static final float enemiesDetectionRadius = 400.0f;
     private GameDataManager gameDataManager;
     private boolean isMoving;
-
     private CollisionHandler collisionHandler;
     private Obstacle bush1;
     private Tile walkOnMe1;
@@ -56,6 +55,14 @@ public class GameView extends SurfaceView implements Runnable {
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        setMeasuredDimension(width, height);
     }
 
     @Override
@@ -115,10 +122,10 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
+                creatureEntity.draw(canvas);
                 walkOnMe1.draw(canvas);
                 walkOnMe2.draw(canvas);
                 player.draw(canvas);
-                creatureEntity.draw(canvas);
                 bush1.draw(canvas);
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }

@@ -1,32 +1,36 @@
 package com.example.dreambound;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
-
-
 import java.util.ArrayList;
 
 public class CollisionHandler {
 
-    Context context = null;
-    int windowHeight;
+    Context context;
     int windowWidth;
-    int gridHeight;
+    int windowHeight;
     int gridWidth;
+    int gridHeight;
+    private ArrayList<GameObject> objects;
+    private CollisionListener listener;
 
-    //TODO: Data structure for collide-able entities
-        ArrayList<GameObject> objects;
-    //TODO: Data structure for Creature Entities
-    //TODO: Constructor generate our tile maps
+    interface CollisionListener {
+        void onCollisionWithCreature();
+    }
+
     CollisionHandler(Context context, ArrayList<GameObject> objects) {
         this.context = context;
         this.objects = objects;
+        if (context instanceof CollisionListener) {
+            this.listener = (CollisionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement CollisionListener");
+        }
 
-        gridHeight = (int) (windowHeight / Constants.CHUNK_SIZE);
-        gridWidth = (int) (windowWidth / Constants.CHUNK_SIZE);
-        windowHeight = context.getResources().getDisplayMetrics().heightPixels;
         windowWidth = context.getResources().getDisplayMetrics().widthPixels;
+        windowHeight = context.getResources().getDisplayMetrics().heightPixels;
+        gridWidth = (int) (windowWidth / Constants.CHUNK_SIZE);
+        gridHeight = (int) (windowHeight / Constants.CHUNK_SIZE);
     }
     //generic check between two objects for collision
     private boolean checkCollision(GameObject player, GameObject target) {
@@ -71,14 +75,10 @@ public class CollisionHandler {
     }
 
     private void collisionWithCreatureEntitiesEvent() {
-        //TODO: Implement fragment
-
-        //TODO:Implement logic to receive boolean from intent or fragment
-
-        //TODO:Implement Game Over logic and screen.
-
-
         Log.i("Collision Detected", "Collision with Creature event");
+        if (listener != null) {
+            listener.onCollisionWithCreature();
+        }
     }
 
     private void collisionFromCreaturesToObjectsEvent() {
