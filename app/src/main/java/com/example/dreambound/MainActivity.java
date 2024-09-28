@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements CollisionHandler.CollisionListener {
 
-    private GameView gameView;
+    GameView gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
