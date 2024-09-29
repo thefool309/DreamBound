@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "310232959948",
+    "project_id": "dream-bound",
+    "storage_bucket": "dream-bound.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310232959948:android:c3ea9d4fec2448be2e6b69",
+        "android_client_info": {
+          "package_name": "com.example.dreambound"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5GNtP8vC7ck_MhMW_zbO6RF4hTHKIJjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
