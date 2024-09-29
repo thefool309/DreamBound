@@ -52,6 +52,7 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation files('libs/tmxloader.jar')
 
     implementation libs.appcompat
     implementation libs.material
