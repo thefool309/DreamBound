@@ -33,6 +33,27 @@ public class LogIn extends AppCompatActivity {
                 Intent intent = new Intent(LogIn.this, CreateAccount.class);
                 startActivity(intent);
             }
+
         });
+
+        Button loginButton = findViewById(R.id.log_in_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LogIn.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button forgotPasswordButton = findViewById(R.id.forgot_password_button);
+        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LogIn.this, ForgotPassword.class);
+                startActivity(intent);
+            }
+        });
+
+        }
     }
-}
+
