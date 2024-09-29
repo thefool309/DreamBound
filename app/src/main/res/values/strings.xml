@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">DreamBound</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="login">LogIn</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="create_account">Create account</string>
+    <string name="emailAddress">email</string>
+    <string name="confirmPassword">confirmPassword</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
+    <string name="title_activity_forgot_password">ForgotPassword</string>
+    <string name="send_verification_code">Send verification code</string>
 </resources>
