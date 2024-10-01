@@ -18,7 +18,7 @@ public class DreamMapData {
     * adding the missing implementation of TMX Object Layers
     */
 
-    static class DreamTileSet {
+    static class DreamTileSet { //data for the tileset as a whole
         public String name;
 
         public int firstGID;
@@ -30,7 +30,7 @@ public class DreamMapData {
         public HashMap<String, HashMap<String, String>> properties;
     }
 
-    static class DreamLayer {
+    static class DreamLayer {  //data for each individual layer
         public String name;
 
         //tiles are not stored as objects for the sake of memory efficiency
@@ -40,31 +40,34 @@ public class DreamMapData {
         public int width, height;
         public double opacity;
 
-        HashMap<String, String> properties;
+        public HashMap<String, String> properties;
     }
 
-    static class DreamTMXObject{
+    static class ObjectPropertiesValue {    //Data for the Properties on an object
+        public String type;
+        public String value;
+    }
+
+    static class DreamTMXObject{    //a TMXObject for storing in object layers and collision information
         public String name;
         public String type;
         int x, y;
         int width, height;
 
-        String group;
-        HashMap<String, String> properties;
-    }
+        public HashMap<String, ObjectPropertiesValue> properties; //HashMap for properties as you only need the name, type, and value
+    }                                                      //I will be using the name as a "key" here, and the type and value as the data
 
-    static class DreamObjectLayer{
+    static class DreamObjectLayer{      //a layer of objects usually with the same properties
         public String name;
-        int index;
-        ArrayList<DreamTMXObject> objects;
+        public int index;
+        public ArrayList<DreamTMXObject> objects;
     }
 
     public long  getGIDAtLayer(int x, int y, int layerIndex) {
-
         return ((tileLayers.get(layerIndex).tiles[y][x]));
     }
 
-    public Long getLocalID(long GID){
+    public Long getLocalID(long GID){       //get the local id of a tile
         long currentFirstGID = GID;
         Long localId = null; //null for error checking.
         for (int i = tilesets.size() - 1; i >= 0; i--) {
@@ -77,8 +80,7 @@ public class DreamMapData {
         return localId;
     }
 
-    public Integer getTileSetIndex(long GID) {
-        //search for a specific tilesTileIndex
+    public Integer getTileSetIndex(long GID) {  //search for a specific tile's Tilemap's Index
         Integer tileSetIndex = null;
         long currentFirstGID = GID;
         for(int i = tilesets.size() - 1; i >= 0; i--) {
@@ -87,11 +89,11 @@ public class DreamMapData {
                 tileSetIndex = i;
             }
         }
-        // If the GID is not valid return null
-        return tileSetIndex;
+
+        return tileSetIndex; // If the GID is not valid return null
     }
 
-    public Integer getTileSetIndex(String name){
+    public Integer getTileSetIndex(String name){        //get a tileset index by name
         Integer tileSetIndex = null; //returns null for error checking
 
         for(int i = tilesets.size() - 1; i >= 0; i--) {
@@ -103,7 +105,7 @@ public class DreamMapData {
         return tileSetIndex;
     }
 
-    public Integer getLayerIndex(String name){
+    public Integer getLayerIndex(String name){      //get a layer index by name
         Integer layerIndex = null; //returns null for error checking
         for(int i = 0; i < tileLayers.size(); i++) {
             if(tileLayers.get(i).name.equals(name)){
@@ -113,13 +115,14 @@ public class DreamMapData {
         return layerIndex;
     }
 
+    //member fields
     public String name;
     public int	height, width;
     public int	tilewidth, tileheight;
-    public String orientation; // Must be "orthogonal", per David.
+    public String orientation; //Must be "orthogonal", per David.
 
-    public ArrayList<DreamTileSet> tilesets; // <tileset.name, tileset>
-    public ArrayList<DreamTMXObject> objects; // We can search by several parameters (not just name) so a linear search is probably best
+    public ArrayList<DreamTileSet> tilesets; //<tileset.name, tileset> was a comment included in davids code
+    public ArrayList<DreamTMXObject> objects; //We can search by several parameters (not just name) so a linear search is probably best
     public ArrayList<DreamLayer> tileLayers;
     public ArrayList<DreamObjectLayer> objectLayers;
 
