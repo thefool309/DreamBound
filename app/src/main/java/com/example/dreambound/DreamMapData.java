@@ -7,13 +7,14 @@ public class DreamMapData {
     /*A Data structure to hold the tilemap data.
     * This can be used to construct the tilemap
     * and the object layers.
+    * David handled a lot of the work for me here, I will simply be implementing map object loading
+     * I am rebuilding the code from the ground up to make some design change differences however.
     */
 
     /*
     * BASED ON CODE FROM: davidmi/Android-TMX-Loader https://github.com/davidmi/Android-TMX-Loader
     * TMX LOADER FOR ANDROID Second beta release
     * 0.8.1 Written by David Iserovich
-    * Big thank you to David who did a lot of the work for me.
     * I will be taking David's Android-TMX-Loader and
     * adding the missing implementation of TMX Object Layers
     */
@@ -32,9 +33,9 @@ public class DreamMapData {
 
     static class DreamLayer {  //data for each individual layer
         public String name;
-
+        // By tmx design, the actual tilemap is just a set of gids.
+        // The array can be initialized to new int[width][height]
         //tiles are not stored as objects for the sake of memory efficiency
-
         public long[][] tiles;
 
         public int width, height;
@@ -63,6 +64,7 @@ public class DreamMapData {
         public ArrayList<DreamTMXObject> objects;
     }
 
+    //accessors
     public long  getGIDAtLayer(int x, int y, int layerIndex) {
         return ((tileLayers.get(layerIndex).tiles[y][x]));
     }
@@ -126,6 +128,7 @@ public class DreamMapData {
     public ArrayList<DreamLayer> tileLayers;
     public ArrayList<DreamObjectLayer> objectLayers;
 
+    //constructor
     public DreamMapData(){
         tilesets = new ArrayList<DreamTileSet>();
         objects = new ArrayList<DreamTMXObject>();
