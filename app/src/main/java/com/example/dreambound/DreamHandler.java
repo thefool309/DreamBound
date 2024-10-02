@@ -26,7 +26,8 @@ public class DreamHandler extends DefaultHandler {
     //Member Fields
 
     //markers for which tag we're in
-    private boolean inTileSet, inTile, inLayer, inData, inObjectLayer, inObject, inProperties;
+    private boolean inMap, inTileSet, inTile, inLayer, inData, inObjectGroup, inObject, inProperties;
+
     //ID of the current tile we're adding properties to.
     //this is an OFFSET from the firstGID of the tile in the tileset.
     private String currentTileID;
@@ -41,15 +42,16 @@ public class DreamHandler extends DefaultHandler {
 
     private DreamMapData data;
 
-    /*
-    * these fields hold the buffer and data to help
-    * decode the long stream of gids in the data fields
-    */
+
+    //these fields hold the buffer and data to help
+    //decode the long stream of gids in the data fields
+
     private char[] buffer;
     private int bufferIndex;
     private int currentX;
     private int currentY;
     public int MAX_INT_DECIMAL_LENGTH = 10;
+
 
     //constructor
     public DreamHandler() {
@@ -71,6 +73,32 @@ public class DreamHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         Log.i("Element Started", "element: " + qName);
+        switch (localName) {        // instead of chaining if/else statements together I used a switch/case
+            case "map":             //this is to improve readability
+                inMap = true;
+                if (!(attributes.getValue("orientation").equals("orthogonal"))) {
+                    throw new SAXException("Unsupported orientation. Parse Terminated.");
+                }
+                break;
+            case "tileset":
+                inTileSet = true;
+                break;
+            case "layer":
+                inLayer = true;
+                break;
+            case "data":
+                inData = true;
+                break;
+            case "objectgroup":
+                inObjectGroup = true;
+                break;
+            case "object":
+                inObject = true;
+                break;
+            case "properties":
+                inProperties = true;
+                break;
+        }
     }
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
