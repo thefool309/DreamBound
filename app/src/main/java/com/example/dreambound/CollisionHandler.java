@@ -30,11 +30,11 @@ public class CollisionHandler {
         windowWidth = context.getResources().getDisplayMetrics().widthPixels;
     }
     //generic check between two objects for collision
-    private boolean checkCollision(GameObject player, GameObject target) {
-        return player.getX() < target.getX() + target.getWidth() &&
-                player.getX() + player.getWidth() > target.getX() &&
-                player.getY() < target.getY() + target.getHeight() &&
-                player.getY() + player.getHeight() > target.getY();
+    private boolean checkCollision(GameObject object, GameObject target) {
+        return object.getX() < target.getX() + target.getWidth() &&
+                object.getX() + object.getWidth() > target.getX() &&
+                object.getY() < target.getY() + target.getHeight() &&
+                object.getY() + object.getHeight() > target.getY();
     }
 
     void HandleCollision() {
