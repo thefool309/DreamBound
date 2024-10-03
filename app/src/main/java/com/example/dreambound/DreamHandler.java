@@ -12,8 +12,9 @@ public class DreamHandler extends DefaultHandler {
      This is the SAX2 XML parser that interprets the TMX
      file and creates a TileMapData object based on that
      I will be implementing map objectgroup loading
+     I will also attempt to implement CSV support
      I am rebuilding the code David made
-      from the ground up to make some design changes,
+     from the ground up to make some design changes,
      and for the sake of learning how it works.
     */
 
@@ -27,7 +28,7 @@ public class DreamHandler extends DefaultHandler {
     //Member Fields
 
     //markers for which tag we're in
-    private boolean inMap, inTileSet, inTile, inLayer, inData, inObjectGroup, inObject, inProperties;
+    private boolean inMap, inTileSet, inTile, inLayer, parsingData, inObjectGroup, inObject, inProperties;
 
     //ID of the current tile we're adding properties to.
     //this is an OFFSET from the firstGID of the tile in the tileset.
@@ -52,7 +53,8 @@ public class DreamHandler extends DefaultHandler {
     private int currentX;
     private int currentY;
     public int MAX_INT_DECIMAL_LENGTH = 10;
-
+    private String encoding;
+    private StringBuilder dataBuilder;
 
     //constructor
     public DreamHandler() {
@@ -108,9 +110,19 @@ public class DreamHandler extends DefaultHandler {
                 break;
             case "layer":
                 inLayer = true;
+                currentLayer = new DreamMapData.DreamLayer();
+                currentLayer.name = atts.getValue("name");
+                currentLayer.width = Integer.parseInt(atts.getValue("width"));
+                currentLayer.height = Integer.parseInt(atts.getValue("height"));
+                if (atts.getValue("opacity") != null) currentLayer.opacity = Double.parseDouble(atts.getValue("opacity"));
+                currentLayer.tiles = new long[currentLayer.height][currentLayer.width];
+
+                currentLayerProperties = new HashMap<String, DreamMapData.PropertiesValue>();
                 break;
             case "data":
-                inData = true;
+                encoding = atts.getValue("encoding");
+                dataBuilder.setLength(0);
+                parsingData = true;
                 break;
             case "objectgroup":
                 inObjectGroup = true;
@@ -126,11 +138,56 @@ public class DreamHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         Log.i("Element Ended", "element: " + qName);
+        switch (localName) {
+            case "map":
+                inMap = false;
+                break;
+            case "data":
+                if (encoding.equals("csv")) {
+                    processCSV();
+                }
+        }
     }
 
     @Override
     public void characters(char[] ch, int start, int length) {
         Log.i("Characters_In_Element Ended", "characters: " + new String(ch, start, length));
+        if (parsingData && encoding.equals("csv")) {
+            //accumulate the character data
+            dataBuilder.append(new String(ch, start, length));
+        }
     }
 
+    private void processCSV() {
+        String data = dataBuilder.toString();
+        //remove newlines and carriage returns
+        data = data.replace("\n", "").replace("\r", "");
+
+        String[] tiles = data.split(",");
+        int width = currentLayer.width;  // Width of the layer (in tiles)
+        int height = currentLayer.height; //Height of the layer (again in tiles)
+
+        int x = 0; //column
+        int y = 0; //row
+
+        //iterate over each tile value
+        for (String tile : tiles) {
+            long tileValue = Long.parseLong(tile);
+            //set the tile in the current layer at position
+            currentLayer.setTile(x, y, tileValue);
+
+            x++; //increment column
+
+            //once we hit the end of the row
+            if (x >= width) {
+                x = 0; //reset column
+                y++; //increment row
+            }
+        }
+
+        //clear the StringBuilder for the next data block
+        dataBuilder.setLength(0);
+        parsingData = false;
+
+    }
 }

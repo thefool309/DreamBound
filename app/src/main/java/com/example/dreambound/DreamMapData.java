@@ -37,11 +37,14 @@ public class DreamMapData {
         // The array can be initialized to new int[width][height]
         //tiles are not stored as objects for the sake of memory efficiency
         public long[][] tiles;
-
         public int width, height;
         public double opacity;
 
         public HashMap<String, String> properties;
+
+        public void setTile(int x, int y, long GID) {
+            tiles[x][y] = GID;
+        }
     }
 
     static class PropertiesValue {    //Data for the Properties on an object
