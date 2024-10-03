@@ -25,7 +25,7 @@ public class DreamMapData {
         public int firstGID;
         public int tileWidth, tileHeight;
 
-        public String ImageFilename;
+        public String imageFilename;
         public int imageWidth, imageHeight;
 
         public HashMap<String, HashMap<String, String>> properties;

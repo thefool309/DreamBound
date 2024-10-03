@@ -96,6 +96,11 @@ public class DreamHandler extends DefaultHandler {
                 currentTileSetProperties = new HashMap<String, DreamMapData.PropertiesValue>();
                 inTileSet = true;
                 break;
+            case "image":
+                currentTileSet.imageFilename = atts.getValue("source");
+                currentTileSet.imageWidth = Integer.parseInt(atts.getValue("width"));
+                currentTileSet.imageHeight = Integer.parseInt(atts.getValue("height"));
+                break;
             case "layer":
                 inLayer = true;
                 break;
