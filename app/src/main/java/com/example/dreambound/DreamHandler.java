@@ -1,5 +1,6 @@
 package com.example.dreambound;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import android.util.Log;
@@ -42,7 +43,7 @@ public class DreamHandler extends DefaultHandler {
     HashMap<String, DreamMapData.PropertiesValue> currentTileSetProperties;
     HashMap<String, DreamMapData.PropertiesValue> currentLayerProperties;
 
-    private DreamMapData data;
+    private DreamMapData dreamMapData;
 
 
     //these fields hold the buffer and data to help
@@ -55,6 +56,7 @@ public class DreamHandler extends DefaultHandler {
     public int MAX_INT_DECIMAL_LENGTH = 10;
     private String encoding;
     private StringBuilder dataBuilder;
+    private String compression;
 
     //constructor
     public DreamHandler() {
@@ -66,11 +68,11 @@ public class DreamHandler extends DefaultHandler {
     }
 
     //accessor
-    public DreamMapData getTileMapData() { return data; }
+    public DreamMapData getTileMapData() { return dreamMapData; }
 
     @Override
     public void startDocument() throws SAXException{
-        data = new DreamMapData();
+        dreamMapData = new DreamMapData();
     }
 
     @Override
@@ -86,12 +88,12 @@ public class DreamHandler extends DefaultHandler {
                 if (!(atts.getValue("orientation").equals("orthogonal"))) {
                     throw new SAXException("Unsupported orientation. Parse Terminated.");
                 }
-                data.orientation = atts.getValue("orientation");
-                Log.d("Checking", data.orientation);
-                data.height = Integer.parseInt(atts.getValue("height"));
-                data.width = Integer.parseInt(atts.getValue("width"));
-                data.tilewidth = Integer.parseInt(atts.getValue("tilewidth"));
-                data.tileheight = Integer.parseInt(atts.getValue("tileheight"));
+                dreamMapData.orientation = atts.getValue("orientation");
+                Log.d("Checking", dreamMapData.orientation);
+                dreamMapData.height = Integer.parseInt(atts.getValue("height"));
+                dreamMapData.width = Integer.parseInt(atts.getValue("width"));
+                dreamMapData.tilewidth = Integer.parseInt(atts.getValue("tilewidth"));
+                dreamMapData.tileheight = Integer.parseInt(atts.getValue("tileheight"));
                 break;
             case "tileset":
                 inTileSet = true;
@@ -122,6 +124,7 @@ public class DreamHandler extends DefaultHandler {
             case "data":
                 encoding = atts.getValue("encoding");
                 dataBuilder.setLength(0);
+                compression = atts.getValue("compression");
                 parsingData = true;
                 break;
             case "objectgroup":
@@ -135,6 +138,7 @@ public class DreamHandler extends DefaultHandler {
                 break;
         }
     }
+
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         Log.i("Element Ended", "element: " + qName);
@@ -145,6 +149,16 @@ public class DreamHandler extends DefaultHandler {
             case "data":
                 if (encoding.equals("csv")) {
                     processCSV();
+                }
+                else if (encoding.equals("xml")) {
+                    processXML();
+                }
+                else if (encoding.equals("base64")) {
+                    try {
+                        processBase64Data();
+                    } catch(IOException e) {
+                        Log.e("base64 IO exception", e.getMessage());
+                    }
                 }
         }
     }
@@ -188,6 +202,21 @@ public class DreamHandler extends DefaultHandler {
         //clear the StringBuilder for the next data block
         dataBuilder.setLength(0);
         parsingData = false;
+    }
+
+    private void processXML() {
+
+    }
+
+    private void processBase64Data() throws IOException {
+        String data = dataBuilder.toString();
+        //TODO: Decode base64 data into a byte array
+
+
+        //TODO: Compression handling
+
+
+        //TODO: While loop to Iterate through each 32-bit GID (4 bytes per ID)
 
     }
 }
