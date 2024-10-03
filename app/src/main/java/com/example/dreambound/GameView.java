@@ -1,6 +1,7 @@
 package com.example.dreambound;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.SystemClock;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import davidiserovich.TMXLoader.TileMapData;
+
 import java.util.ArrayList;
 
 
@@ -20,6 +23,8 @@ public class GameView extends SurfaceView implements Runnable {
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
     private static final float enemiesDetectionRadius = 400.0f;
+
+    private MapLoader mapLoader;
 
     private long startTime, loopTime;
 
@@ -51,6 +56,7 @@ public class GameView extends SurfaceView implements Runnable {
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables, staticObjects);
+        mapLoader = new MapLoader(this.getContext(), "app/src/main/assets/caveoftutorials.tmx");
     }
 
     @Override
@@ -133,13 +139,23 @@ public class GameView extends SurfaceView implements Runnable {
         if (surfaceHolder.getSurface().isValid()) {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
-                canvas.drawColor(Color.BLACK);
+                try {
+                    // Clear the canvas
+                    canvas.drawColor(Color.BLACK);
 
+                    // Render the map using mapLoader
+                    Bitmap mapImage = mapLoader.renderMap(canvas.getWidth(), canvas.getHeight());
+                    if (mapImage != null) {
+                        canvas.drawBitmap(mapImage, 0, 0, null);
+                    }
 
-                for (GameObject object : allObjects){
-                    object.draw(canvas);
+                    // Draw other game objects
+                    for (GameObject object : allObjects) {
+                        object.draw(canvas);
+                    }
+                } finally {
+                    surfaceHolder.unlockCanvasAndPost(canvas);
                 }
-                surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
     }
