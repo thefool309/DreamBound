@@ -9,19 +9,20 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class DreamHandler extends DefaultHandler {
     /*
-    * This is the SAX2 XML parser that interprets the input the TMX
-    * file and creates a TileMapData object based on that
-    * David handled a lot of the work for me here too, I will simply be implementing map object loading
-    * I am rebuilding the code from the ground up to make some design change differences, and for the sake
-    * of learning how it works.
+     This is the SAX2 XML parser that interprets the TMX
+     file and creates a TileMapData object based on that
+     I will be implementing map objectgroup loading
+     I am rebuilding the code David made
+      from the ground up to make some design changes,
+     and for the sake of learning how it works.
     */
 
     /*
-     * BASED ON CODE FROM: davidmi/Android-TMX-Loader https://github.com/davidmi/Android-TMX-Loader
-     * TMX LOADER FOR ANDROID Second beta release
-     * 0.8.1 Written by David Iserovich
-     * Big thank you to David who did a lot of the work for me.
-     */
+     BASED ON CODE FROM: davidmi/Android-TMX-Loader https://github.com/davidmi/Android-TMX-Loader
+     TMX LOADER FOR ANDROID Second beta release
+     0.8.1 Written by David Iserovich
+     Big thank you to David who did a lot of the work for me.
+    */
 
     //Member Fields
 
@@ -73,8 +74,12 @@ public class DreamHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         Log.i("Element Started", "element: " + qName);
-        switch (localName) {        // instead of chaining if/else statements together I used a switch/case
-            case "map":             //this is to improve readability
+
+        //startElement() takes in the XML element (tag) that is currently being parsed
+        //and compares it to this conditional
+        //Read more on SAXparser if you're interested in the specifics of how this works
+        switch (localName) {        // instead of chaining if/else statements together
+            case "map":             //I used a switch/case this is to improve readability
                 inMap = true;
                 if (!(atts.getValue("orientation").equals("orthogonal"))) {
                     throw new SAXException("Unsupported orientation. Parse Terminated.");
