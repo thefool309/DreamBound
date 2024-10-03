@@ -44,7 +44,7 @@ public class DreamMapData {
         public HashMap<String, String> properties;
     }
 
-    static class ObjectPropertiesValue {    //Data for the Properties on an object
+    static class PropertiesValue {    //Data for the Properties on an object
         public String type;
         public String value;
     }
@@ -55,7 +55,7 @@ public class DreamMapData {
         int x, y;
         int width, height;
 
-        public HashMap<String, ObjectPropertiesValue> properties; //HashMap for properties as you only need the name, type, and value
+        public HashMap<String, PropertiesValue> properties; //HashMap for properties as you only need the name, type, and value
     }                                                      //I will be using the name as a "key" here, and the type and value as the data
 
     static class DreamObjectLayer{      //a layer of objects usually with the same properties

@@ -37,8 +37,8 @@ public class DreamHandler extends DefaultHandler {
     DreamMapData.DreamTileSet currentTileSet;
     DreamMapData.DreamLayer currentLayer;
 
-    HashMap<String, DreamMapData.ObjectPropertiesValue> currentTileSetProperties;
-    HashMap<String, DreamMapData.ObjectPropertiesValue> currentLayerProperties;
+    HashMap<String, DreamMapData.PropertiesValue> currentTileSetProperties;
+    HashMap<String, DreamMapData.PropertiesValue> currentLayerProperties;
 
     private DreamMapData data;
 
@@ -71,16 +71,29 @@ public class DreamHandler extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
         Log.i("Element Started", "element: " + qName);
         switch (localName) {        // instead of chaining if/else statements together I used a switch/case
             case "map":             //this is to improve readability
                 inMap = true;
-                if (!(attributes.getValue("orientation").equals("orthogonal"))) {
+                if (!(atts.getValue("orientation").equals("orthogonal"))) {
                     throw new SAXException("Unsupported orientation. Parse Terminated.");
                 }
+                data.orientation = atts.getValue("orientation");
+                Log.d("Checking", data.orientation);
+                data.height = Integer.parseInt(atts.getValue("height"));
+                data.width = Integer.parseInt(atts.getValue("width"));
+                data.tilewidth = Integer.parseInt(atts.getValue("tilewidth"));
+                data.tileheight = Integer.parseInt(atts.getValue("tileheight"));
                 break;
             case "tileset":
+                inTileSet = true;
+                currentTileSet = new  DreamMapData.DreamTileSet();
+                currentTileSet.firstGID = Integer.parseInt(atts.getValue("firstgid"));
+                currentTileSet.tileWidth = Integer.parseInt(atts.getValue("tilewidth"));
+                currentTileSet.tileHeight = Integer.parseInt(atts.getValue("tileheight"));
+                currentTileSet.name = atts.getValue("name");
+                currentTileSetProperties = new HashMap<String, DreamMapData.PropertiesValue>();
                 inTileSet = true;
                 break;
             case "layer":
