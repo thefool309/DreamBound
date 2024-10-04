@@ -80,7 +80,7 @@ public class DreamHandler extends DefaultHandler {
         Log.i("Element Started", "element: " + qName);
 
         //startElement() takes in the XML element (tag) that is currently being parsed
-        //and compares it to this conditional
+        //and compares it to this conditional to decide what attributes to pull
         //Read more on SAXparser if you're interested in the specifics of how this works
         switch (localName) {        // instead of chaining if/else statements together
             case "map":             //I used a switch/case this is to improve readability
@@ -142,12 +142,12 @@ public class DreamHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         Log.i("Element Ended", "element: " + qName);
-        switch (localName) {
+        switch (localName) {            //end element executes when the end of an element is reached
             case "map":
                 inMap = false;
                 break;
             case "data":
-                if (encoding.equals("csv")) {
+                if (encoding.equals("csv")) {   //check encoding
                     processCSV();
                 }
                 else if (encoding.equals("xml")) {
@@ -165,6 +165,7 @@ public class DreamHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) {
+        //characters goes of when characters are detected in-between an element
         Log.i("Characters_In_Element Ended", "characters: " + new String(ch, start, length));
         if (parsingData && encoding.equals("csv")) {
             //accumulate the character data
@@ -205,6 +206,7 @@ public class DreamHandler extends DefaultHandler {
     }
 
     private void processXML() {
+        //TODO: Create XML Processor.
 
     }
 
