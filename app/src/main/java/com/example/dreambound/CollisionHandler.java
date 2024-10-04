@@ -29,8 +29,8 @@ public class CollisionHandler {
 
         windowWidth = context.getResources().getDisplayMetrics().widthPixels;
         windowHeight = context.getResources().getDisplayMetrics().heightPixels;
-        gridWidth = (float) (windowWidth / Constants.CHUNK_SIZE);
-        gridHeight = (float) (windowHeight / Constants.CHUNK_SIZE);
+        gridWidth = (int) (windowWidth / Constants.CHUNK_SIZE);
+        gridHeight = (int) (windowHeight / Constants.CHUNK_SIZE);
     }
     //generic check between two objects for collision
     private boolean checkCollision(GameObject player, GameObject target) {

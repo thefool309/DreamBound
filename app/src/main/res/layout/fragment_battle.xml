@@ -8,6 +8,7 @@
             android:id="@+id/myImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="BattleBackground"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:src="@drawable/grass_lands_battle"/>
