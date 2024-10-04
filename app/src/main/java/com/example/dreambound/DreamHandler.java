@@ -1,8 +1,13 @@
 package com.example.dreambound;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
 
+import android.util.Base64;
 import android.util.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -49,7 +54,6 @@ public class DreamHandler extends DefaultHandler {
     //these fields hold the buffer and data to help
     //decode the long stream of gids in the data fields
 
-    private char[] buffer;
     private int bufferIndex;
     private int currentX;
     private int currentY;
@@ -61,7 +65,6 @@ public class DreamHandler extends DefaultHandler {
     //constructor
     public DreamHandler() {
         super();
-        buffer = new char[MAX_INT_DECIMAL_LENGTH];
         bufferIndex = 0;
         currentX = 0;
         currentY = 0;
@@ -212,13 +215,35 @@ public class DreamHandler extends DefaultHandler {
 
     private void processBase64Data() throws IOException {
         String data = dataBuilder.toString();
-        //TODO: Decode base64 data into a byte array
+        //Decode base64 data into a byte array
+        byte[] decodedBytes = android.util.Base64.decode(data, android.util.Base64.DEFAULT);    //must use android.util.Base64 for compatibility
 
+        //Compression handling
+        int numberOfBytes = decodedBytes.length;
+        if (compression.equals("gzip")) {
+            GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(decodedBytes));
+        }
+        else if (compression.equals("zlib")) {
+            Inflater inflater = new Inflater();
+            inflater.setInput(decodedBytes, 0, numberOfBytes);
+        }
 
-        //TODO: Compression handling
+        int x = 0;  //row
+        int y = 0;  //column
+        ByteBuffer buffer = ByteBuffer.wrap(decodedBytes); //buffer for decoded bytes
 
+        //While loop to Iterate through each 32-bit GID (4 bytes per ID)
+        while (buffer.remaining() >= 4) {
+            long gid = buffer.getLong(); //take in GID
 
-        //TODO: While loop to Iterate through each 32-bit GID (4 bytes per ID)
+            currentLayer.setTile(x, y, gid);
+            x++;
+            if (x >= currentLayer.width){
+                x = 0;
+                y++;
+            }
+
+        }
 
     }
 }
