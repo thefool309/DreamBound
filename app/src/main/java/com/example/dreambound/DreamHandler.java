@@ -47,7 +47,7 @@ public class DreamHandler extends DefaultHandler {
     HashMap<String, DreamMapData.PropertiesValue> currentTileSetProperties;
     HashMap<String, DreamMapData.PropertiesValue> currentLayerProperties;
 
-    private DreamMapData dreamMapData;
+    private DreamMapData mapData;
 
     private int currentColumn = 0, currentRow = 0;
 
@@ -65,11 +65,11 @@ public class DreamHandler extends DefaultHandler {
     }
 
     //accessor
-    public DreamMapData getTileMapData() { return dreamMapData; }
+    public DreamMapData getTileMapData() { return mapData; }
 
     @Override
     public void startDocument() throws SAXException{
-        dreamMapData = new DreamMapData();
+        mapData = new DreamMapData();
     }
 
     @Override
@@ -85,12 +85,12 @@ public class DreamHandler extends DefaultHandler {
                 if (!(attributes.getValue("orientation").equals("orthogonal"))) {
                     throw new SAXException("Unsupported orientation. Parse Terminated.");
                 }
-                dreamMapData.orientation = attributes.getValue("orientation");
-                Log.d("Checking", dreamMapData.orientation);
-                dreamMapData.height = Integer.parseInt(attributes.getValue("height"));
-                dreamMapData.width = Integer.parseInt(attributes.getValue("width"));
-                dreamMapData.tilewidth = Integer.parseInt(attributes.getValue("tilewidth"));
-                dreamMapData.tileheight = Integer.parseInt(attributes.getValue("tileheight"));
+                mapData.orientation = attributes.getValue("orientation");
+                Log.d("Checking", mapData.orientation);
+                mapData.height = Integer.parseInt(attributes.getValue("height"));
+                mapData.width = Integer.parseInt(attributes.getValue("width"));
+                mapData.tilewidth = Integer.parseInt(attributes.getValue("tilewidth"));
+                mapData.tileheight = Integer.parseInt(attributes.getValue("tileheight"));
                 break;
             case "tileset":
                 inTileSet = true;
@@ -139,7 +139,7 @@ public class DreamHandler extends DefaultHandler {
                 }
             case "objectgroup":
                 //TODO: implement object group logic
-                inObjectGroup = true;
+                inObjectGroup = true;   //create new object group
                 currentObjectGroup = new DreamMapData.DreamObjectGroup(attributes.getValue("name"), Integer.parseInt(attributes.getValue("id")));
                 break;
             case "object":
@@ -185,6 +185,11 @@ public class DreamHandler extends DefaultHandler {
                         throw new RuntimeException(e);
                     }
                 }
+            case "objectgroup":
+                inObjectGroup = false;  //add object group to map data
+                mapData.objectLayers.add(currentObjectGroup);
+                break;
+
         }
     }
 
