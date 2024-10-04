@@ -7,10 +7,10 @@ import java.util.ArrayList;
 public class CollisionHandler {
 
     Context context;
-    int windowWidth;
-    int windowHeight;
-    int gridWidth;
-    int gridHeight;
+    float windowWidth;
+    float windowHeight;
+    float gridWidth;
+    float gridHeight;
     private ArrayList<GameObject> objects;
     private CollisionListener listener;
 
@@ -29,8 +29,8 @@ public class CollisionHandler {
 
         windowWidth = context.getResources().getDisplayMetrics().widthPixels;
         windowHeight = context.getResources().getDisplayMetrics().heightPixels;
-        gridWidth = (int) (windowWidth / Constants.CHUNK_SIZE);
-        gridHeight = (int) (windowHeight / Constants.CHUNK_SIZE);
+        gridWidth = (float) (windowWidth / Constants.CHUNK_SIZE);
+        gridHeight = (float) (windowHeight / Constants.CHUNK_SIZE);
     }
     //generic check between two objects for collision
     private boolean checkCollision(GameObject player, GameObject target) {

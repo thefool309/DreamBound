@@ -11,6 +11,7 @@ public class GameDataManager {
     public void SaveGameState(Context context, Player player, CreatureEntity enemy) {
         try {
             Log.d("GameDataManager", "Saving game state...");
+            Log.d("GameDataManager", "Player Position: (" + player.getX() + ", " + player.getY() + ")");
             FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
@@ -20,6 +21,7 @@ public class GameDataManager {
             oos.close();
             fos.close();
             Log.d("GameDataManager", "Saved game state!");
+            Log.d("GameDataManager", "Player Position: (" + player.getX() + ", " + player.getY() + ")");
         } catch (Exception e) {
             Log.d("GameDataManager", "Saving game state failed!" + e.getMessage());
             e.printStackTrace();
@@ -31,6 +33,7 @@ public class GameDataManager {
         if (file.exists()) {
             try {
                 Log.d("GameDataManager", "Loading game state...");
+                Log.d("GameDataManager", "Player Position: (" + player.getX() + ", " + player.getY() + ")");
                 FileInputStream fis = context.openFileInput(FILE_NAME);
                 ObjectInputStream ois = new ObjectInputStream(fis);
 
@@ -43,9 +46,11 @@ public class GameDataManager {
                 player.initPaint(Color.RED);
                 enemy.initPaint(Color.BLUE);
 
+
                 ois.close();
                 fis.close();
                 Log.d("GameDataManager", "Loaded game state!");
+                Log.d("GameDataManager", "Player Position: (" + player.getX() + ", " + player.getY() + ")");
             } catch (Exception e) {
                 Log.d("GameDataManager", "Loading game state failed!" + e.getMessage());
                 e.printStackTrace();

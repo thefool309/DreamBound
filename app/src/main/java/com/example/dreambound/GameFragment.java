@@ -1,6 +1,7 @@
 package com.example.dreambound;
 
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ public class GameFragment extends Fragment {
 
     private GameView gameView;
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         gameView = new GameView(getActivity());
         return gameView;

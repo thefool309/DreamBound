@@ -26,7 +26,6 @@ public class GameView extends SurfaceView implements Runnable {
     private Obstacle bush1;
     private Tile walkOnMe1;
     private Tile walkOnMe2;
-
     private ArrayList<GameObject> objects = new ArrayList<>();
     private ArrayList<GameObject> collidables = new ArrayList<>();
 
@@ -36,7 +35,7 @@ public class GameView extends SurfaceView implements Runnable {
         gameDataManager = new GameDataManager();
         player = new Player(100, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
         creatureEntity = new CreatureEntity(2200, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
-        gameDataManager.LoadGameState(context, player, creatureEntity);
+        gameDataManager.LoadGameState(getContext(),player,creatureEntity);
         bush1 = new Obstacle(1000, 500);
         walkOnMe1 = new Tile(1000, 400);
         walkOnMe2 = new Tile(1000, 600);

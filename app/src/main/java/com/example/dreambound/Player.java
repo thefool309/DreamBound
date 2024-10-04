@@ -14,6 +14,6 @@ public class Player extends Character implements Serializable {
     }
     //draw
     public void draw(Canvas canvas) {
-        canvas.drawRect(getX(), getY(), getX() + getWidth(), getY() + getHeight(), paint);
+        canvas.drawRect(box.position.x, box.position.y, box.position.x + box.width, box.position.y + box.height, paint);
     }
 }
