@@ -81,10 +81,20 @@ public class DreamMapData {
         }
     }                                                      //I will be using the name as a "key" here, and the type and value as the data
 
-    static class DreamObjectLayer{      //a layer of objects usually with the same properties
+    static class DreamObjectGroup {      //a layer of objects usually with the same properties
         public String name;
         public int index;
         public ArrayList<DreamTMXObject> objects;
+
+        DreamObjectGroup(String name, int index) {
+            this.name = name;
+            this.index = index;
+            objects = new ArrayList<>();
+        }
+
+        public void AddObject(DreamTMXObject object) {
+            objects.add(object);
+        }
     }
 
     //accessors
@@ -147,16 +157,14 @@ public class DreamMapData {
     public String orientation; //Must be "orthogonal", per David.
 
     public ArrayList<DreamTileSet> tilesets; //<tileset.name, tileset> was a comment included in davids code
-    public ArrayList<DreamTMXObject> objects; //We can search by several parameters (not just name) so a linear search is probably best
     public ArrayList<DreamLayer> tileLayers;
-    public ArrayList<DreamObjectLayer> objectLayers;
+    public ArrayList<DreamObjectGroup> objectLayers;
 
     //constructor
     public DreamMapData(){
         tilesets = new ArrayList<DreamTileSet>();
-        objects = new ArrayList<DreamTMXObject>();
         tileLayers = new ArrayList<DreamLayer>();
-        objectLayers = new ArrayList<DreamObjectLayer>();
+        objectLayers = new ArrayList<DreamObjectGroup>();
     }
 
 }

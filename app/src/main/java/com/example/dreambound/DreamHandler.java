@@ -38,11 +38,11 @@ public class DreamHandler extends DefaultHandler {
     //ID of the current tile we're adding properties to.
     //this is an OFFSET from the firstGID of the tile in the tileset.
     private String currentTileID;
-    private String currentObjectLayerName;
     DreamMapData.DreamTMXObject currentTMXObject;
 
     DreamMapData.DreamTileSet currentTileSet;
     DreamMapData.DreamLayer currentLayer;
+    DreamMapData.DreamObjectGroup currentObjectGroup;
 
     HashMap<String, DreamMapData.PropertiesValue> currentTileSetProperties;
     HashMap<String, DreamMapData.PropertiesValue> currentLayerProperties;
@@ -140,17 +140,19 @@ public class DreamHandler extends DefaultHandler {
             case "objectgroup":
                 //TODO: implement object group logic
                 inObjectGroup = true;
-
+                currentObjectGroup = new DreamMapData.DreamObjectGroup(attributes.getValue("name"), Integer.parseInt(attributes.getValue("id")));
                 break;
             case "object":
-                //TODO: implement object logic
+                //object logic
+                inObject = true;
+                //create object
                 DreamMapData.DreamTMXObject object = new DreamMapData.DreamTMXObject(Float.parseFloat(attributes.getValue("x")),
                                                                                      Float.parseFloat(attributes.getValue("y")),
                                                                                      Float.parseFloat(attributes.getValue("width")),
                                                                                      Float.parseFloat(attributes.getValue("height")),
                                                                                      attributes.getValue("name"));
-                dreamMapData.objects.add(object);
-                inObject = true;
+                //add object to dreamMapData.objects
+                currentObjectGroup.objects.add(object);
                 break;
             case "properties":
                 //TODO: implement properties logic
