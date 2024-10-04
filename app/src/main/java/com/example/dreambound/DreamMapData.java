@@ -55,10 +55,30 @@ public class DreamMapData {
     static class DreamTMXObject{    //a TMXObject for storing in object layers and collision information
         public String name;
         public String type;
-        int x, y;
-        int width, height;
+        float x, y;
+        float width, height;
 
         public HashMap<String, PropertiesValue> properties; //HashMap for properties as you only need the name, type, and value
+
+        DreamTMXObject(float x, float y, float width, float height) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            name = "";
+        }
+
+        DreamTMXObject(float x, float y, float width, float height, String name) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.name = name;
+        }
+
+        private void addProperty(String key, PropertiesValue value) {
+            properties.put(key, value);
+        }
     }                                                      //I will be using the name as a "key" here, and the type and value as the data
 
     static class DreamObjectLayer{      //a layer of objects usually with the same properties

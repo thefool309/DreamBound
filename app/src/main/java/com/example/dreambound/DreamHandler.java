@@ -140,9 +140,16 @@ public class DreamHandler extends DefaultHandler {
             case "objectgroup":
                 //TODO: implement object group logic
                 inObjectGroup = true;
+
                 break;
             case "object":
                 //TODO: implement object logic
+                DreamMapData.DreamTMXObject object = new DreamMapData.DreamTMXObject(Float.parseFloat(attributes.getValue("x")),
+                                                                                     Float.parseFloat(attributes.getValue("y")),
+                                                                                     Float.parseFloat(attributes.getValue("width")),
+                                                                                     Float.parseFloat(attributes.getValue("height")),
+                                                                                     attributes.getValue("name"));
+                dreamMapData.objects.add(object);
                 inObject = true;
                 break;
             case "properties":
