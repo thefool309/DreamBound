@@ -44,8 +44,8 @@ public class DreamHandler extends DefaultHandler {
     DreamMapData.DreamLayer currentLayer;
     DreamMapData.DreamObjectGroup currentObjectGroup;
 
-    HashMap<String, DreamMapData.PropertiesValue> currentTileSetProperties;
-    HashMap<String, DreamMapData.PropertiesValue> currentLayerProperties;
+    HashMap<String, DreamMapData.DreamProperty> currentTileSetProperties;
+    HashMap<String, DreamMapData.DreamProperty> currentLayerProperties;
 
     private DreamMapData mapData;
 
@@ -99,7 +99,7 @@ public class DreamHandler extends DefaultHandler {
                 currentTileSet.tileWidth = Integer.parseInt(attributes.getValue("tilewidth"));
                 currentTileSet.tileHeight = Integer.parseInt(attributes.getValue("tileheight"));
                 currentTileSet.name = attributes.getValue("name");
-                currentTileSetProperties = new HashMap<String, DreamMapData.PropertiesValue>();
+                currentTileSetProperties = new HashMap<String, DreamMapData.DreamProperty>();
                 inTileSet = true;
                 break;
             case "image":
@@ -116,7 +116,7 @@ public class DreamHandler extends DefaultHandler {
                 if (attributes.getValue("opacity") != null) currentLayer.opacity = Double.parseDouble(attributes.getValue("opacity"));
                 currentLayer.tiles = new long[currentLayer.height][currentLayer.width];
 
-                currentLayerProperties = new HashMap<String, DreamMapData.PropertiesValue>();
+                currentLayerProperties = new HashMap<String, DreamMapData.DreamProperty>();
                 break;
             case "data":
                 encoding = attributes.getValue("encoding");
@@ -146,18 +146,28 @@ public class DreamHandler extends DefaultHandler {
                 //object logic
                 inObject = true;
                 //create object
-                DreamMapData.DreamTMXObject object = new DreamMapData.DreamTMXObject(Float.parseFloat(attributes.getValue("x")),
-                                                                                     Float.parseFloat(attributes.getValue("y")),
-                                                                                     Float.parseFloat(attributes.getValue("width")),
-                                                                                     Float.parseFloat(attributes.getValue("height")),
-                                                                                     attributes.getValue("name"));
+                currentTMXObject = new DreamMapData.DreamTMXObject(Float.parseFloat(attributes.getValue("x")),
+                                                                    Float.parseFloat(attributes.getValue("y")),
+                                                                    Float.parseFloat(attributes.getValue("width")),
+                                                                    Float.parseFloat(attributes.getValue("height")),
+                                                                    attributes.getValue("name"));
                 //add object to dreamMapData.objects
-                currentObjectGroup.objects.add(object);
+                currentObjectGroup.objects.add(currentTMXObject);
                 break;
             case "properties":
-                //TODO: implement properties logic
+                // properties logic
                 inProperties = true;
                 break;
+            case "property":
+                if (inObject) {
+                    currentTMXObject.properties.put(attributes.getValue("name"),
+                                                    new DreamMapData.DreamProperty(attributes.getValue("type"),
+                                                                                     attributes.getValue("value"),
+                                                                                     attributes.getValue("name")));
+                }
+                else if (inLayer && !inObject) {
+
+                }
         }
     }
 

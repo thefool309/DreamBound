@@ -28,7 +28,9 @@ public class DreamMapData {
         public String imageFilename;
         public int imageWidth, imageHeight;
 
-        public HashMap<String, HashMap<String, String>> properties;
+        public HashMap<String, DreamProperty> properties;
+
+        public void AddProperty(String name, DreamProperty property){ properties.put(name, property); }
     }
 
     static class DreamLayer {  //data for each individual layer
@@ -40,16 +42,27 @@ public class DreamMapData {
         public int width, height;
         public double opacity;
 
-        public HashMap<String, String> properties;
+        public HashMap<String, DreamProperty> properties;
 
         public void setTile(int x, int y, long GID) {
             tiles[x][y] = GID;
         }
+        private void AddProperty(String name, DreamProperty property) {
+            properties.put(name, property);
+        }
+
     }
 
-    static class PropertiesValue {    //Data for the Properties on an object
+    static class DreamProperty {    //Data for the Properties on an object
         public String type;
         public String value;
+        public String name;
+
+        DreamProperty(String type, String value, String name) {
+            this.type = type;
+            this.value = value;
+            this.name = name;
+        }
     }
 
     static class DreamTMXObject{    //a TMXObject for storing in object layers and collision information
@@ -58,7 +71,7 @@ public class DreamMapData {
         float x, y;
         float width, height;
 
-        public HashMap<String, PropertiesValue> properties; //HashMap for properties as you only need the name, type, and value
+        public HashMap<String, DreamProperty> properties; //HashMap for properties as you only need the name, type, and value
 
         DreamTMXObject(float x, float y, float width, float height) {
             this.x = x;
@@ -76,8 +89,8 @@ public class DreamMapData {
             this.name = name;
         }
 
-        private void addProperty(String key, PropertiesValue value) {
-            properties.put(key, value);
+        public void AddProperty(String name, DreamProperty property) {
+            properties.put(name, property);
         }
     }                                                      //I will be using the name as a "key" here, and the type and value as the data
 
@@ -85,12 +98,15 @@ public class DreamMapData {
         public String name;
         public int index;
         public ArrayList<DreamTMXObject> objects;
+        public HashMap<String, DreamProperty> properties; //<name, property>
 
         DreamObjectGroup(String name, int index) {
             this.name = name;
             this.index = index;
             objects = new ArrayList<>();
         }
+
+        private void AddProperty(String name, DreamProperty property) { properties.put(name, property); }
 
         public void AddObject(DreamTMXObject object) {
             objects.add(object);
