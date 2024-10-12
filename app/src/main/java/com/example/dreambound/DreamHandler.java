@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 
+import android.util.Base64;
 import android.util.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -33,7 +34,7 @@ public class DreamHandler extends DefaultHandler {
     //Member Fields
 
     //markers for which tag we're in
-    private boolean inMap, inTileSet, inTile, inLayer, parsingData, inObjectGroup, inObject, inProperties;
+    private boolean inMap, inTileSet, inTile, inLayer, parsingData, inObjectGroup, inObject, inProperties, inProperty, inImage;
 
     //ID of the current tile we're adding properties to.
     //this is an OFFSET from the firstGID of the tile in the tileset.
@@ -58,6 +59,7 @@ public class DreamHandler extends DefaultHandler {
     private String encoding;
     private StringBuilder dataBuilder;
     private String compression;
+
 
     //constructor
     public DreamHandler() {
@@ -103,6 +105,7 @@ public class DreamHandler extends DefaultHandler {
                 inTileSet = true;
                 break;
             case "image":
+                inImage = true;
                 currentTileSet.imageFilename = attributes.getValue("source");
                 currentTileSet.imageWidth = Integer.parseInt(attributes.getValue("width"));
                 currentTileSet.imageHeight = Integer.parseInt(attributes.getValue("height"));
@@ -119,10 +122,10 @@ public class DreamHandler extends DefaultHandler {
                 currentLayerProperties = new HashMap<String, DreamMapData.DreamProperty>();
                 break;
             case "data":
+                parsingData = true;
                 encoding = attributes.getValue("encoding");
                 dataBuilder.setLength(0);
                 compression = attributes.getValue("compression");
-                parsingData = true;
                 break;
             case "tile":
                 inTile = true;
@@ -159,15 +162,28 @@ public class DreamHandler extends DefaultHandler {
                 inProperties = true;
                 break;
             case "property":
+                inProperty = true;
                 if (inObject) {
-                    currentTMXObject.properties.put(attributes.getValue("name"),
+                    currentTMXObject.properties.putIfAbsent(attributes.getValue("name"),
                                                     new DreamMapData.DreamProperty(attributes.getValue("type"),
-                                                                                     attributes.getValue("value"),
-                                                                                     attributes.getValue("name")));
+                                                                                   attributes.getValue("value"),
+                                                                                   attributes.getValue("name")));
                 }
-                else if (inLayer && !inObject) {
-
+                else if (inLayer) {
+                    currentLayer.properties.putIfAbsent(attributes.getValue("name"),
+                                                        new DreamMapData.DreamProperty(attributes.getValue("type"),
+                                                                                       attributes.getValue("value"),
+                                                                                       attributes.getValue("name")));
                 }
+                else if (inObjectGroup) {
+                    currentObjectGroup.properties.putIfAbsent(attributes.getValue("name"),
+                                                              new DreamMapData.DreamProperty(attributes.getValue("type"),
+                                                                                             attributes.getValue("value"),
+                                                                                             attributes.getValue("name")));
+                }
+                break;
+            default:
+                Log.e("Unexpected value: ", "Unexpected value: " + localName);
         }
     }
 
@@ -177,6 +193,9 @@ public class DreamHandler extends DefaultHandler {
         switch (localName) {            //end element executes when the end of an element is reached
             case "map":
                 inMap = false;
+                break;
+            case "tileset":
+                inTileSet = false;
                 break;
             case "data":
                 if (encoding.equals("csv")) {   //check encoding
@@ -195,9 +214,32 @@ public class DreamHandler extends DefaultHandler {
                         throw new RuntimeException(e);
                     }
                 }
+                parsingData = false;
+                break;
+            case "image":
+                inImage = false;
+                break;
+            case "layer":
+                inLayer = false;
+                currentLayer = null;
+                break;
+            case "tile":
+                inTile = false;
+                break;
             case "objectgroup":
                 inObjectGroup = false;  //add object group to map data
-                mapData.objectLayers.add(currentObjectGroup);
+                mapData.objectGroups.add(currentObjectGroup);
+                currentObjectGroup = null;
+                break;
+            case "object":
+                inObject = false;
+                currentTMXObject = null;
+                break;
+            case "properties":
+                inProperties = false;
+                break;
+            case "property":
+                inProperty = false;
                 break;
 
         }
@@ -243,7 +285,7 @@ public class DreamHandler extends DefaultHandler {
     private void processBase64Data() throws IOException {
         String data = dataBuilder.toString();
         //Decode base64 data into a byte array
-        byte[] decodedBytes = android.util.Base64.decode(data, android.util.Base64.DEFAULT);    //must use android.util.Base64 for compatibility
+        byte[] decodedBytes = Base64.decode(data, Base64.DEFAULT);    //must use android.util.Base64 for compatibility
 
         //Compression handling
         int numberOfBytes = decodedBytes.length;

@@ -174,13 +174,13 @@ public class DreamMapData {
 
     public ArrayList<DreamTileSet> tilesets; //<tileset.name, tileset> was a comment included in davids code
     public ArrayList<DreamLayer> tileLayers;
-    public ArrayList<DreamObjectGroup> objectLayers;
+    public ArrayList<DreamObjectGroup> objectGroups;
 
     //constructor
     public DreamMapData(){
         tilesets = new ArrayList<DreamTileSet>();
         tileLayers = new ArrayList<DreamLayer>();
-        objectLayers = new ArrayList<DreamObjectGroup>();
+        objectGroups = new ArrayList<DreamObjectGroup>();
     }
 
 }
