@@ -1,6 +1,7 @@
 package com.example.dreambound;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -33,12 +34,8 @@ public class DreamHandler extends DefaultHandler {
 
     //Member Fields
 
-    //markers for which tag we're in
-    private boolean inMap, inTileSet, inTile, inLayer, parsingData, inObjectGroup, inObject, inProperties, inProperty, inImage;
+    private boolean inMap, inTileSet, inTile, inLayer, parsingData, inObjectGroup, inObject, inProperties, inProperty, inImage; //flags for which tag we are in
 
-    //ID of the current tile we're adding properties to.
-    //this is an OFFSET from the firstGID of the tile in the tileset.
-    private String currentTileID;
     DreamMapData.DreamTMXObject currentTMXObject;
 
     DreamMapData.DreamTileSet currentTileSet;
@@ -52,27 +49,19 @@ public class DreamHandler extends DefaultHandler {
 
     private int currentColumn = 0, currentRow = 0;
 
-    //these fields hold the buffer and data to help
-    //decode the long stream of gids in the data fields
-
-    public int MAX_INT_DECIMAL_LENGTH = 10;
-    private String encoding;
-    private StringBuilder dataBuilder;
-    private String compression;
+    private String encoding;    //string to hold type of encoding
+    private StringBuilder dataBuilder = new StringBuilder();      //String Builder to create data with
+    private String compression;     //string to hold type of compression for base64
 
 
     //constructor
-    public DreamHandler() {
-        super();
-    }
+    public DreamHandler() { super(); }
 
     //accessor
     public DreamMapData getTileMapData() { return mapData; }
 
     @Override
-    public void startDocument() throws SAXException{
-        mapData = new DreamMapData();
-    }
+    public void startDocument() { mapData = new DreamMapData(); }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -101,7 +90,7 @@ public class DreamHandler extends DefaultHandler {
                 currentTileSet.tileWidth = Integer.parseInt(attributes.getValue("tilewidth"));
                 currentTileSet.tileHeight = Integer.parseInt(attributes.getValue("tileheight"));
                 currentTileSet.name = attributes.getValue("name");
-                currentTileSetProperties = new HashMap<String, DreamMapData.DreamProperty>();
+                currentTileSetProperties = new HashMap<>();
                 inTileSet = true;
                 break;
             case "image":
@@ -119,7 +108,7 @@ public class DreamHandler extends DefaultHandler {
                 if (attributes.getValue("opacity") != null) currentLayer.opacity = Double.parseDouble(attributes.getValue("opacity"));
                 currentLayer.tiles = new long[currentLayer.height][currentLayer.width];
 
-                currentLayerProperties = new HashMap<String, DreamMapData.DreamProperty>();
+                currentLayerProperties = new HashMap<>();
                 break;
             case "data":
                 parsingData = true;
@@ -260,7 +249,6 @@ public class DreamHandler extends DefaultHandler {
 
         String[] tiles = data.split(",");
         int width = currentLayer.width;  // Width of the layer (in tiles)
-        int height = currentLayer.height; //Height of the layer (again in tiles)
 
         //iterate over each tile value
         for (String tile : tiles) {
@@ -279,7 +267,6 @@ public class DreamHandler extends DefaultHandler {
 
         //clear the StringBuilder for the next data block
         dataBuilder.setLength(0);
-        parsingData = false;
     }
 
     private void processBase64Data() throws IOException {
@@ -288,20 +275,39 @@ public class DreamHandler extends DefaultHandler {
         byte[] decodedBytes = Base64.decode(data, Base64.DEFAULT);    //must use android.util.Base64 for compatibility
 
         //Compression handling
-        int numberOfBytes = decodedBytes.length;
         if (compression.equals("gzip")) {
+            // GZIP decompression
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(decodedBytes));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gzipInputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, len);
+            }
+            decodedBytes = outputStream.toByteArray();  // Overwrite decodedBytes with decompressed data
+            gzipInputStream.close();
+            outputStream.close();
         }
         else if (compression.equals("zlib")) {
+            // Zlib decompression
             Inflater inflater = new Inflater();
-            inflater.setInput(decodedBytes, 0, numberOfBytes);
+            inflater.setInput(decodedBytes);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(decodedBytes.length);
+            byte[] buffer = new byte[1024];
+            while (!inflater.finished()) {
+                int len = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, len);
+            }
+            decodedBytes = outputStream.toByteArray();  // Overwrite decodedBytes with decompressed data
+            inflater.end();
+            outputStream.close();
         }
 
         ByteBuffer buffer = ByteBuffer.wrap(decodedBytes); //buffer for decoded bytes
 
         //While loop to Iterate through each 32-bit GID (4 bytes per ID)
         while (buffer.remaining() >= 4) {
-            long gid = buffer.getLong(); //take in GID
+            long gid = buffer.getInt() & 0xFFFFFFFFL; //take in GID
 
             currentLayer.setTile(currentColumn, currentRow, gid);
             currentColumn++;
@@ -312,6 +318,5 @@ public class DreamHandler extends DefaultHandler {
 
         }
         dataBuilder.setLength(0);
-        parsingData = false;
     }
 }
