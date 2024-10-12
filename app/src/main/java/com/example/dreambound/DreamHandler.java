@@ -295,15 +295,19 @@ public class DreamHandler extends DefaultHandler {
             inflater.setInput(decodedBytes);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(decodedBytes.length);
             byte[] buffer = new byte[1024];
-            while (!inflater.finished()) {
-                int len = 0;
-                try {
-                    len = inflater.inflate(buffer);
-                } catch (DataFormatException e) {
-                    Log.e("Data Format Exception", "error" + e.getMessage());
+            int len = 0;
+            try {
+                while ((len = inflater.inflate(buffer)) > 0) {
+                    outputStream.write(buffer, 0, len);
                 }
-                outputStream.write(buffer, 0, len);
+            } catch (DataFormatException e) {
+                Log.e("Data Format Exception", "error" + e.getMessage());
+            } finally {
+                inflater.end();
+                outputStream.close();
             }
+
+
             decodedBytes = outputStream.toByteArray();  // Overwrite decodedBytes with decompressed data
             inflater.end();
             outputStream.close();
