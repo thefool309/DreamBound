@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.zip.DataFormatException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 
@@ -295,7 +296,12 @@ public class DreamHandler extends DefaultHandler {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream(decodedBytes.length);
             byte[] buffer = new byte[1024];
             while (!inflater.finished()) {
-                int len = inflater.inflate(buffer);
+                int len = 0;
+                try {
+                    len = inflater.inflate(buffer);
+                } catch (DataFormatException e) {
+                    Log.e("Data Format Exception", "error" + e.getMessage());
+                }
                 outputStream.write(buffer, 0, len);
             }
             decodedBytes = outputStream.toByteArray();  // Overwrite decodedBytes with decompressed data
