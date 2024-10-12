@@ -12,6 +12,7 @@ public class Player extends Character implements Serializable {
         setIsPlayer(true);
         initPaint(Color.RED);
     }
+
     //draw
     public void draw(Canvas canvas) {
         canvas.drawRect(box.position.x, box.position.y, box.position.x + box.width, box.position.y + box.height, paint);
