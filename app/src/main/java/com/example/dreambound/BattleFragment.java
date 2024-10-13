@@ -67,7 +67,7 @@ public class BattleFragment extends Fragment {
             return; // Stop further turns
         }
 
-        // First check if it's a player's or an enemy's turn
+        // Check if it's a player's or an enemy's turn
         if (currentTurnIndex < players.length) {
             // It's a player's turn
             if (players[currentTurnIndex].isAlive()) {
@@ -177,12 +177,12 @@ public class BattleFragment extends Fragment {
         // Add the new message to the log
         battleLog.add(message);
 
-        // If the log has more than 3 messages, remove the oldest one
+        // If the log has more than 10 messages, remove the oldest one
         if (battleLog.size() > 10) {
             battleLog.remove(0); // Remove the first (oldest) message
         }
 
-        // Build the string to display the last 3 messages
+        // Build the string to display the last 10 messages
         StringBuilder logText = new StringBuilder();
         for (String logEntry : battleLog) {
             logText.append(logEntry).append("\n");
