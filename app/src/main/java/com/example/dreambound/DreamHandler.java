@@ -239,8 +239,8 @@ public class DreamHandler extends DefaultHandler {
     public void characters(char[] ch, int start, int length) {
         //characters goes of when characters are detected in-between an element
         Log.i("Characters_In_Element Ended", "characters: " + new String(ch, start, length));
-            //accumulate the character data
-            dataBuilder.append(new String(ch, start, length));
+        //accumulate the character data
+        dataBuilder.append(new String(ch, start, length));
     }
 
     private void processCSV() throws IOException {

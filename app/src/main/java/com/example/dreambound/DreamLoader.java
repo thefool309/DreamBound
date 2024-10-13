@@ -148,11 +148,11 @@ public class DreamLoader {
             mapData = handler.getTileMapData();
 
         } catch (ParserConfigurationException pce) {
-            Log.e("TMXLoader", "Parser configuration error", pce);
+            Log.e("DreamLoader", "Parser configuration error" + pce);
         } catch (SAXException se) {
-            Log.e("TMXLoader", "SAX parsing error", se);
+            Log.e("DreamLoader", "SAX parsing error" + se);
         } catch (IOException ioe) {
-            Log.e("TMXLoader", "I/O error during SAX parsing", ioe);
+            Log.e("DreamLoader", "I/O error during SAX parsing" + ioe);
         }
 
         return mapData;
