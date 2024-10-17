@@ -1,8 +1,10 @@
 package com.example.dreambound;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,6 +35,15 @@ public class GameView extends SurfaceView implements Runnable {
     private Tile walkOnMe1;
     private Tile walkOnMe2;
 
+    private DreamMapData mapData;    // The map data loaded from the TMX file
+    private Bitmap visibleMap;       // The bitmap for the visible portion of the map
+    private Rect viewport;           // The current viewport (visible area of the map)
+    private int startLayer = 0;      // First layer to render
+    private int endLayer;            // Last layer to render based on map layers
+    int playerX;
+    int playerY;
+
+
     private ArrayList<CreatureEntity> creatures = new ArrayList<>();
     private ArrayList<GameObject> collidables = new ArrayList<>();
     private ArrayList<GameObject> staticObjects = new ArrayList<>();
@@ -45,6 +56,7 @@ public class GameView extends SurfaceView implements Runnable {
         if (gameEngine == null) {
             startEngineAndPullData();
         }
+
         //load game if there is one
         gameDataManager = new GameDataManager();
         gameDataManager.LoadGameState(context, player, creatures);
@@ -52,6 +64,50 @@ public class GameView extends SurfaceView implements Runnable {
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables, staticObjects);
     }
+
+    // Initialize the map and set up the viewport
+    private void initMap(Context context) {
+        // Load the tile map data from the assets folder
+        mapData = DreamLoader.readTMX("map.tmx", context);
+
+        // Define the layers to be rendered
+        endLayer = mapData.tileLayers.size();
+
+        // Set an initial viewport (visible map area)
+        viewport = new Rect(playerX, playerY, playerX + getWidth(), playerY + getHeight());
+
+        // Load the visible portion of the map
+        loadVisibleMap(context);
+    }
+
+    // Load the visible portion of the map based on the viewport
+    private void loadVisibleMap(Context context) {
+        visibleMap = DreamLoader.createBitmap(mapData, context, viewport, startLayer, endLayer);
+    }
+
+    // Method to update the viewport as the player moves
+    public void updateViewport(int newPlayerX, int newPlayerY) {
+        playerX = newPlayerX;
+        playerY = newPlayerY;
+
+        // Update the viewport based on the player's new position
+        viewport.set(playerX, playerY, playerX + getWidth(), playerY + getHeight());
+
+        // Load the updated visible map
+        loadVisibleMap(getContext());
+
+        // Redraw the view
+        invalidate();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        // Draw the visible portion of the map on the canvas
+
+    }
+
 
     @Override
     public void run() {
@@ -106,7 +162,7 @@ public class GameView extends SurfaceView implements Runnable {
             player.setY(targetY);
             isMoving = false;
         }
-
+        
         for (CreatureEntity entity: creatures) {
             entity.followPlayer(player);
         }
@@ -130,10 +186,16 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void draw() {
+        initMap(this.getContext());
         if (surfaceHolder.getSurface().isValid()) {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
+                if (visibleMap != null) {
+                    canvas.drawBitmap(visibleMap, 0, 0, null);
+                }
+                else {
                 canvas.drawColor(Color.BLACK);
+                }
 
 
                 for (GameObject object : allObjects){

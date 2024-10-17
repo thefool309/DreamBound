@@ -50,7 +50,7 @@ public class DreamHandler extends DefaultHandler {
 
     private int currentColumn = 0, currentRow = 0;
 
-    private String encoding;    //string to hold type of encoding
+    private String encoding = "";    //string to hold type of encoding
     private StringBuilder dataBuilder = new StringBuilder();      //String Builder to create data with
     private String compression;     //string to hold type of compression for base64
 
@@ -130,6 +130,7 @@ public class DreamHandler extends DefaultHandler {
                     currentColumn = 0;  //set column to zero
                     currentRow++;       //increment row
                 }
+                break;
             case "objectgroup":
                 //TODO: implement object group logic
                 inObjectGroup = true;   //create new object group
@@ -174,6 +175,7 @@ public class DreamHandler extends DefaultHandler {
                 break;
             default:
                 Log.e("Unexpected value: ", "Unexpected value: " + localName);
+                break;
         }
     }
 
@@ -188,6 +190,7 @@ public class DreamHandler extends DefaultHandler {
                 inTileSet = false;
                 break;
             case "data":
+                try{
                 if (encoding.equals("csv")) {   //check encoding
                     try {
                         processCSV();
@@ -203,6 +206,9 @@ public class DreamHandler extends DefaultHandler {
                         Log.e("base64 IO exception", "error" + e.getMessage());
                         throw new RuntimeException(e);
                     }
+                }
+                } catch (Exception e) {
+                    Log.e("data parsing error", "error" + e.getMessage());
                 }
                 parsingData = false;
                 break;

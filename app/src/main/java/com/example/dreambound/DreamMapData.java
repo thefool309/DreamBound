@@ -45,7 +45,7 @@ public class DreamMapData {
         public HashMap<String, DreamProperty> properties;
 
         public void setTile(int x, int y, long GID) {
-            tiles[x][y] = GID;
+            tiles[y][x] = GID;
         }
         private void AddProperty(String name, DreamProperty property) {
             properties.put(name, property);
