@@ -49,17 +49,17 @@ public class MapLoader extends Activity {
     }
 
 
-    public Bitmap renderMap(Context context, int screenWidth, int screenHeight) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-
-        // Load the TMX map data
-        TileMapData mapData = TMXLoader.readTMX(fileName, context);
-
-        // Create the map bitmap
-        Bitmap mapImage = TMXLoader.createBitmap(mapData, context, 0, mapData.layers.size());
-
-        return mapImage;
-    }
+    // public Bitmap renderMap(Context context, int screenWidth, int screenHeight) {
+    //    this.screenWidth = screenWidth;
+    //     this.screenHeight = screenHeight;
+    //
+    //     // Load the TMX map data
+    //     TileMapData mapData = TMXLoader.readTMX(fileName, context);
+    //
+    //     // Create the map bitmap
+    //     Bitmap mapImage = TMXLoader.createBitmap(mapData, context, 0, mapData.layers.size());
+    //
+    //     return mapImage;
+    // }
 }
 
