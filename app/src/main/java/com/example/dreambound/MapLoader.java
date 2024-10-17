@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import davidiserovich.TMXLoader.*;
 
-
+//comment for change to commit
 public class MapLoader extends Activity {
     private Context context;
     ImageView mapView;
