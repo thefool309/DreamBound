@@ -3,42 +3,66 @@ package com.example.dreambound;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Queue;
 
 public class BattleFragment extends Fragment {
     private Player[] players;
     private CreatureEntity[] enemies;
     private int currentTurnIndex = 0;
     private BattleGameView battleGameView;
-    private Button attackButton;
+    private Button attackButton, nextbutton;
     private TextView battleLogTextView;
-    private List<String> battleLog = new LinkedList<>();
+    private Queue<String> battleLog = new LinkedList<>();
+    private boolean isPausedForInput = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_battle, container, false);
         battleGameView = view.findViewById(R.id.battleGameView);
         battleLogTextView = view.findViewById(R.id.battleLogTextView);
-
         attackButton = view.findViewById(R.id.buttonAttack);
+        nextbutton = view.findViewById(R.id.buttonNextLog);
+
+        attackButton.setEnabled(false); // Disable attack button initially to show first log message
+
+        // Set up the next button listener for the log
+        nextbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayNextMessage();
+            }
+        });
+
+        // Set up the attack button listener
         attackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 playerAttack();
+                disableButtons();
+                displayNextMessage();
             }
         });
+
+        // Add initial message to the queue
+        battleLog.add("FIGHT!!");
+        displayNextMessage(); // Show the first message and wait for input
+
+        // Set up players and enemies
         players = new Player[] {new Player(100, 600, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
                 , new Player(100, 700, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
-                , new Player(100, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)};
+                , new Player(100, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
+        };
         enemies = new CreatureEntity[] {new CreatureEntity(2200, 600, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
                 , new CreatureEntity(2200, 700, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
-                , new CreatureEntity(2200, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)};
+                , new CreatureEntity(2200, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
+        };
         if (battleGameView != null) {
             battleGameView.setCreatures(enemies);
             battleGameView.setPlayers(players);
@@ -51,6 +75,23 @@ public class BattleFragment extends Fragment {
         return view;
     }
 
+    private void displayNextMessage() {
+        if (!battleLog.isEmpty()) {
+            // Display the next message in the queue
+            String message = battleLog.poll();
+            battleLogTextView.setText(message);
+        }
+
+        // Disable attack button until all messages are displayed
+        if (!battleLog.isEmpty()) {
+            attackButton.setEnabled(false); // Keep attack button disabled while there is messages to be displayed
+        } else {
+            // If no more messages, enable the attack button for next action
+            attackButton.setEnabled(true);
+            nextbutton.setEnabled(false); // Disable next button if no more messages are in the queue
+        }
+    }
+
     private void startBattle() {
         updateTurn();
     }
@@ -59,11 +100,13 @@ public class BattleFragment extends Fragment {
         // Check if the battle is over
         if (allPlayersDefeated()) {
             logBattleMessage("All players are defeated. Game Over.");
+            disableButtons();
             return; // Stop further turns
         }
 
         if (allEnemiesDefeated()) {
             logBattleMessage("All enemies are defeated. You win!");
+            disableButtons();
             return; // Stop further turns
         }
 
@@ -72,7 +115,6 @@ public class BattleFragment extends Fragment {
             // It's a player's turn
             if (players[currentTurnIndex].isAlive()) {
                 logBattleMessage("Player " + (currentTurnIndex + 1) + "'s turn.");
-                enableButtons(); // Enable buttons for player input
             } else {
                 logBattleMessage("Player " + (currentTurnIndex + 1) + " is defeated!");
                 // Skip to the next turn if the player is defeated
@@ -125,11 +167,6 @@ public class BattleFragment extends Fragment {
             return; // Index out of bounds, so exit the method
         }
 
-        if (currentTurnIndex >= players.length) {
-            logBattleMessage("Invalid turn index for player.");
-            return; // Return early if it's not the player's turn
-        }
-
         // Attack an enemy
         int enemyIndex = currentTurnIndex % enemies.length; // Get the correct enemy index
 
@@ -142,8 +179,6 @@ public class BattleFragment extends Fragment {
                 logBattleMessage("Enemy " + (enemyIndex + 1) + " is defeated!");
             }
         }
-
-        disableButtons(); // After attacking, disable buttons
         nextTurn();
     }
 
@@ -177,18 +212,9 @@ public class BattleFragment extends Fragment {
         // Add the new message to the log
         battleLog.add(message);
 
-        // If the log has more than 10 messages, remove the oldest one
-        if (battleLog.size() > 10) {
-            battleLog.remove(0); // Remove the first (oldest) message
+        // Enable the next button if there are messages in the queue
+        if (!battleLog.isEmpty()) {
+            nextbutton.setEnabled(true);
         }
-
-        // Build the string to display the last 10 messages
-        StringBuilder logText = new StringBuilder();
-        for (String logEntry : battleLog) {
-            logText.append(logEntry).append("\n");
-        }
-
-        // Set the text to the TextView
-        battleLogTextView.setText(logText.toString().trim());
     }
 }
