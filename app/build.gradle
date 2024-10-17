@@ -40,4 +40,6 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation files('libs/tmxloader.jar')
+  implementation "com.badlogicgames.gdx:gdx:1.13.0" // Update to latest libGDX version
+  implementation "com.badlogicgames.gdx:gdx-backend-android:1.11.0"
 }

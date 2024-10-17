@@ -1,63 +1,39 @@
 package com.example.dreambound;
-
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
-
 import android.graphics.Bitmap;
-
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import davidiserovich.TMXLoader.*;
 
 
-public class MapLoader extends Activity {
+
+
+public class MapLoader {
     private Context context;
-    ImageView mapView;
-    String fileName;
+    private String fileName;
     private int screenWidth;
     private int screenHeight;
 
     public MapLoader(Context context, String fileName) {
+        if (context == null) {
+            throw new IllegalArgumentException("Context cannot be null");
+        }
         this.context = context;
         this.fileName = fileName;
     }
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //start parsing the .tmx
-        TileMapData mapData = TMXLoader.readTMX(fileName, this);
-
-        mapView = (ImageView)findViewById(R.id.MapImage);
-
-        //create bitmap
-        Bitmap mapImage = TMXLoader.createBitmap(mapData, this, 0, mapData.layers.size());
-
-        if (mapImage != null) {
-            mapView.setImageBitmap(mapImage);
-        }
-
-        //else problem loading map
-        else{
-            Toast errorMessage = Toast.makeText(getApplicationContext(), "Map could not be loaded", Toast.LENGTH_LONG);
-            errorMessage.show();
-        }
-
-
-    }
-
     public Bitmap renderMap(int screenWidth, int screenHeight) {
+        if (context == null) {
+            throw new IllegalStateException("Context is not initialized");
+        }
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        // Load the TMX map data
-        TileMapData mapData = TMXLoader.readTMX(fileName, this);
+
+        // Load the TMX map data using the correct path
+        TileMapData mapData = TMXLoader.readTMX(fileName, context);
 
         // Create the map bitmap
-        Bitmap mapImage = TMXLoader.createBitmap(mapData, context, 0, mapData.layers.size());
+        Bitmap mapImage = TMXLoader.createBitmap(mapData, context, 1, 6);
 
-        // Optionally, you can resize the mapImage to fit the screen dimensions
+        // Optionally, resize the mapImage to fit screen dimensions
         if (mapImage != null) {
             mapImage = Bitmap.createScaledBitmap(mapImage, screenWidth, screenHeight, true);
         }
@@ -65,4 +41,3 @@ public class MapLoader extends Activity {
         return mapImage;
     }
 }
-

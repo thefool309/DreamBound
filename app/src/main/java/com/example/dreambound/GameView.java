@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import davidiserovich.TMXLoader.TileMapData;
 
 import java.util.ArrayList;
 
@@ -23,6 +22,7 @@ public class GameView extends SurfaceView implements Runnable {
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
     private static final float enemiesDetectionRadius = 400.0f;
+    private Bitmap mapImage;
 
     private MapLoader mapLoader;
 
@@ -56,7 +56,11 @@ public class GameView extends SurfaceView implements Runnable {
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables, staticObjects);
-        mapLoader = new MapLoader(this.getContext(), "app/src/main/assets/caveoftutorials.tmx");
+        mapLoader = new MapLoader(context, "caveoftutorials.tmx");
+    }
+
+    public void setMap(Bitmap mapImage) {
+        this.mapImage = mapImage;
     }
 
     @Override
@@ -143,8 +147,6 @@ public class GameView extends SurfaceView implements Runnable {
                     // Clear the canvas
                     canvas.drawColor(Color.BLACK);
 
-                    // Render the map using mapLoader
-                    Bitmap mapImage = mapLoader.renderMap(canvas.getWidth(), canvas.getHeight());
                     if (mapImage != null) {
                         canvas.drawBitmap(mapImage, 0, 0, null);
                     }
