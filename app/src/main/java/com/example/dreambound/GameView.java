@@ -1,7 +1,6 @@
 package com.example.dreambound;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.SystemClock;
@@ -22,9 +21,6 @@ public class GameView extends SurfaceView implements Runnable {
     private SurfaceHolder surfaceHolder;
     private float targetX, targetY;
     private static final float enemiesDetectionRadius = 400.0f;
-    private Bitmap mapImage;
-
-    private MapLoader mapLoader;
 
     private long startTime, loopTime;
 
@@ -56,11 +52,6 @@ public class GameView extends SurfaceView implements Runnable {
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables, staticObjects);
-        mapLoader = new MapLoader(context, "caveoftutorials.tmx");
-    }
-
-    public void setMap(Bitmap mapImage) {
-        this.mapImage = mapImage;
     }
 
     @Override
@@ -146,10 +137,6 @@ public class GameView extends SurfaceView implements Runnable {
                 try {
                     // Clear the canvas
                     canvas.drawColor(Color.BLACK);
-
-                    if (mapImage != null) {
-                        canvas.drawBitmap(mapImage, 0, 0, null);
-                    }
 
                     // Draw other game objects
                     for (GameObject object : allObjects) {
