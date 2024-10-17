@@ -56,7 +56,7 @@ public class GameView extends SurfaceView implements Runnable {
         targetX = player.getX();
         targetY = player.getY();
         collisionHandler = new CollisionHandler(context, collidables, staticObjects);
-        mapLoader = new MapLoader(this.getContext(), "app/src/main/assets/caveoftutorials.tmx");
+        mapLoader = new MapLoader(context, "caveoftutorials.tmx");
     }
 
     @Override
@@ -144,7 +144,7 @@ public class GameView extends SurfaceView implements Runnable {
                     canvas.drawColor(Color.BLACK);
 
                     // Render the map using mapLoader
-                    Bitmap mapImage = mapLoader.renderMap(canvas.getWidth(), canvas.getHeight());
+                    Bitmap mapImage = mapLoader.renderMap(this.getContext(), canvas.getWidth(), canvas.getHeight());
                     if (mapImage != null) {
                         canvas.drawBitmap(mapImage, 0, 0, null);
                     }
@@ -188,7 +188,7 @@ public class GameView extends SurfaceView implements Runnable {
             isPlaying = false;
             gameThread.join();
         } catch (InterruptedException e) {
-            Log.e("Interrupted", "Interrupted while pausing");      //cleaned up exception to get more receptive feedback
+            Log.e("Interrupted", "Interrupted while pausing");      //cleaned up exception to get more feedback
         }
         gameDataManager.SaveGameState(getContext(), player, creatures);
     }

@@ -30,17 +30,17 @@ public class MapLoader extends Activity {
         //start parsing the .tmx
         TileMapData mapData = TMXLoader.readTMX(fileName, this);
 
-        mapView = (ImageView)findViewById(R.id.MapImage);
+        mapView = (ImageView) findViewById(R.id.mapImage);
 
         //create bitmap
-        Bitmap mapImage = TMXLoader.createBitmap(mapData, this, 0, mapData.layers.size());
+        Bitmap mapImage = TMXLoader.createBitmap(mapData, this, 0, 3);
 
         if (mapImage != null) {
             mapView.setImageBitmap(mapImage);
         }
 
         //else problem loading map
-        else{
+        else {
             Toast errorMessage = Toast.makeText(getApplicationContext(), "Map could not be loaded", Toast.LENGTH_LONG);
             errorMessage.show();
         }
@@ -48,19 +48,16 @@ public class MapLoader extends Activity {
 
     }
 
-    public Bitmap renderMap(int screenWidth, int screenHeight) {
+
+    public Bitmap renderMap(Context context, int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+
         // Load the TMX map data
-        TileMapData mapData = TMXLoader.readTMX(fileName, this);
+        TileMapData mapData = TMXLoader.readTMX(fileName, context);
 
         // Create the map bitmap
         Bitmap mapImage = TMXLoader.createBitmap(mapData, context, 0, mapData.layers.size());
-
-        // Optionally, you can resize the mapImage to fit the screen dimensions
-        if (mapImage != null) {
-            mapImage = Bitmap.createScaledBitmap(mapImage, screenWidth, screenHeight, true);
-        }
 
         return mapImage;
     }
