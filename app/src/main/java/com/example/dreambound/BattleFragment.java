@@ -19,7 +19,6 @@ public class BattleFragment extends Fragment {
     private Button attackButton, nextbutton;
     private TextView battleLogTextView;
     private Queue<String> battleLog = new LinkedList<>();
-    private boolean battleEnded = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,8 +89,7 @@ public class BattleFragment extends Fragment {
             nextbutton.setEnabled(false); // Disable next button if no more messages are in the queue
 
             // Check if battle is over and all enemies are defeated
-            if (allEnemiesDefeated() && !battleEnded) {
-                battleEnded = true;
+            if (allEnemiesDefeated()) {
                 endBattle(); // End battle and transition back to GameFragment
             }
         }
