@@ -37,8 +37,6 @@ public class BattleFragment extends Fragment {
         attackButton = view.findViewById(R.id.buttonAttack);
         nextbutton = view.findViewById(R.id.buttonNextLog);
 
-        disableButtons(); // Disable attack button initially to show first log message
-
         // Set up the next button listener for the log
         nextbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +58,7 @@ public class BattleFragment extends Fragment {
         // Add initial message to the queue
         battleLog.add("FIGHT!!");
         displayNextMessage(); // Show the first message and wait for input
+        disableButtons(); // Disable attack button initially to show first log message
 
         if (battleGameView != null) {
             battleGameView.setCreatures(enemies);
