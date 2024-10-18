@@ -30,7 +30,7 @@ public class BattleFragment extends Fragment {
         attackButton = view.findViewById(R.id.buttonAttack);
         nextbutton = view.findViewById(R.id.buttonNextLog);
 
-        attackButton.setEnabled(false); // Disable attack button initially to show first log message
+        disableButtons(); // Disable attack button initially to show first log message
 
         // Set up the next button listener for the log
         nextbutton.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +84,10 @@ public class BattleFragment extends Fragment {
 
         // Disable attack button until all messages are displayed
         if (!battleLog.isEmpty()) {
-            attackButton.setEnabled(false); // Keep attack button disabled while there is messages to be displayed
+            disableButtons(); // Keep attack button disabled while there is messages to be displayed
         } else {
             // If no more messages, enable the attack button for next action
-            attackButton.setEnabled(true);
+            enableButtons();
             nextbutton.setEnabled(false); // Disable next button if no more messages are in the queue
         }
     }
