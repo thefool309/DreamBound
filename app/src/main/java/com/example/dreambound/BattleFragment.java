@@ -20,10 +20,19 @@ public class BattleFragment extends Fragment {
     private Button attackButton, nextbutton;
     private TextView battleLogTextView;
     private Queue<String> battleLog = new LinkedList<>();
-    private boolean isPausedForInput = true;
+    private boolean battleEnded = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Set up players and enemies
+        players = new Player[] {new Player(100, 600, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
+                , new Player(100, 700, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
+                , new Player(100, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
+        };
+        enemies = new CreatureEntity[] {new CreatureEntity(2200, 600, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
+                , new CreatureEntity(2200, 700, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
+                , new CreatureEntity(2200, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
+        };
         View view = inflater.inflate(R.layout.fragment_battle, container, false);
         battleGameView = view.findViewById(R.id.battleGameView);
         battleLogTextView = view.findViewById(R.id.battleLogTextView);
@@ -54,15 +63,6 @@ public class BattleFragment extends Fragment {
         battleLog.add("FIGHT!!");
         displayNextMessage(); // Show the first message and wait for input
 
-        // Set up players and enemies
-        players = new Player[] {new Player(100, 600, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
-                , new Player(100, 700, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
-                , new Player(100, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
-        };
-        enemies = new CreatureEntity[] {new CreatureEntity(2200, 600, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
-                , new CreatureEntity(2200, 700, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
-                , new CreatureEntity(2200, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
-        };
         if (battleGameView != null) {
             battleGameView.setCreatures(enemies);
             battleGameView.setPlayers(players);
@@ -89,6 +89,12 @@ public class BattleFragment extends Fragment {
             // If no more messages, enable the attack button for next action
             enableButtons();
             nextbutton.setEnabled(false); // Disable next button if no more messages are in the queue
+
+            // Check if battle is over and all enemies are defeated
+            if (allEnemiesDefeated() && !battleEnded) {
+                battleEnded = true;
+                endBattle(); // End battle and transition back to GameFragment
+            }
         }
     }
 
@@ -101,12 +107,14 @@ public class BattleFragment extends Fragment {
         if (allPlayersDefeated()) {
             logBattleMessage("All players are defeated. Game Over.");
             disableButtons();
+            logBattleMessage("Filler for endBattle transition");
             return; // Stop further turns
         }
 
         if (allEnemiesDefeated()) {
             logBattleMessage("All enemies are defeated. You win!");
             disableButtons();
+            logBattleMessage("Filler for endBattle transition");
             return; // Stop further turns
         }
 
@@ -136,8 +144,13 @@ public class BattleFragment extends Fragment {
     }
 
     private boolean allEnemiesDefeated() {
+        // Check if enemies array is null
+        if (enemies == null) {
+            return true; // If enemies array is null, consider all enemies defeated
+        }
+
         for (CreatureEntity enemy : enemies) {
-            if (enemy.isAlive()) {
+            if (enemy != null && enemy.isAlive()) {
                 return false;
             }
         }
@@ -215,6 +228,21 @@ public class BattleFragment extends Fragment {
         // Enable the next button if there are messages in the queue
         if (!battleLog.isEmpty()) {
             nextbutton.setEnabled(true);
+        }
+    }
+
+    private void endBattle() {
+        // Replace the BattleFragment with the GameFragment
+        Fragment gameFragment = new GameFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("All enemies are defeated. You win!", true);
+        gameFragment.setArguments(bundle);
+
+        if (getActivity() != null) {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, gameFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 }
