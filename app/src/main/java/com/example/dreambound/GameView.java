@@ -29,14 +29,23 @@ public class GameView extends SurfaceView implements Runnable {
     GameEngine gameEngine;
 
     private CollisionHandler collisionHandler;
+
+    //Objects/Tiles - Initialize in CreateObjects Method    private Obstacle bush1;
+    private Obstacle wall1;
+    private Obstacle wall2;
+    private Obstacle wall3;
+    private Obstacle wall4;
     private Obstacle bush1;
     private Tile walkOnMe1;
     private Tile walkOnMe2;
 
+    //end Object/Tiles
     private ArrayList<CreatureEntity> creatures = new ArrayList<>();
     private ArrayList<GameObject> collidables = new ArrayList<>();
     private ArrayList<GameObject> staticObjects = new ArrayList<>();
     private ArrayList<GameObject> allObjects = new ArrayList<>();
+    private ArrayList<Obstacle> obstacles = new ArrayList<>();
+
 
     public GameView(Context context) {
         super(context);
@@ -64,24 +73,15 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void startEngineAndPullData(){
         if (gameEngine == null) {
-            gameEngine = new GameEngine();
+            gameEngine = new GameEngine(getContext());
             creatures = gameEngine.getCreaturesLoadedIn();
             staticObjects = gameEngine.getStaticObjects();
             allObjects = gameEngine.getAllObjects();
+            obstacles = gameEngine.getObstacles();
             collidables = gameEngine.getCollisionObjects();
             player = gameEngine.getPlayer();
         }
     }
-
-    private void createObjects() {
-        player = new Player(100, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
-        creatureEntity = new CreatureEntity(2200, 500, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
-        bush1 = new Obstacle(1000, 500);
-        walkOnMe1 = new Tile(1000, 400);
-        walkOnMe2 = new Tile(1000, 600);
-    }
-
-
 
     private void update() {
         if (isMoving) {
@@ -135,10 +135,17 @@ public class GameView extends SurfaceView implements Runnable {
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
 
-
-                for (GameObject object : allObjects){
+                for(GameObject floor : allObjects){
+                    floor.draw(canvas);
+                }
+                for (Obstacle object : obstacles){
                     object.draw(canvas);
                 }
+                player.draw(canvas);
+                for (CreatureEntity creature : creatures){
+                    creature.draw(canvas);
+                }
+
                 surfaceHolder.unlockCanvasAndPost(canvas);
             }
         }
