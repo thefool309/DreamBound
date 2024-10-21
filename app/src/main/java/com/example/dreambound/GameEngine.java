@@ -52,12 +52,7 @@ public class GameEngine {
         Obstacle wall6;
         Obstacle wall7;
         Obstacle wall8;
-        Tile walkOnMe1;
-        Tile walkOnMe2;
-        Tile walkOnMe3;
-        Tile walkOnMe4;
-        Tile walkOnMe5;
-        Tile walkOnMe6;
+        Tile grassTile;
 
 
         player = new Player(100, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
@@ -75,7 +70,7 @@ public class GameEngine {
 
         //Bitmap for GRASS
         Bitmap grass = BitmapFactory.decodeResource(context.getResources(), R.drawable._grass);
-        walkOnMe1 = new Tile(0, 0,2400,1000, grass);
+        grassTile = new Tile(0, 0,2400,1000, grass);
 
 
         //allObjects.add(player);
@@ -104,7 +99,7 @@ public class GameEngine {
         allObjects.add(wall8);
         obstacles.add(wall8);
 
-        allObjects.add(walkOnMe1);
+        allObjects.add(grassTile);
 
         upcastObjectsIntoArrays();
 
