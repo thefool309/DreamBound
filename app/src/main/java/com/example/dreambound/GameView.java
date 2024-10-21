@@ -30,16 +30,6 @@ public class GameView extends SurfaceView implements Runnable {
 
     private CollisionHandler collisionHandler;
 
-    //Objects/Tiles - Initialize in CreateObjects Method    private Obstacle bush1;
-    private Obstacle wall1;
-    private Obstacle wall2;
-    private Obstacle wall3;
-    private Obstacle wall4;
-    private Obstacle bush1;
-    private Tile walkOnMe1;
-    private Tile walkOnMe2;
-
-    //end Object/Tiles
     private ArrayList<CreatureEntity> creatures = new ArrayList<>();
     private ArrayList<GameObject> collidables = new ArrayList<>();
     private ArrayList<GameObject> staticObjects = new ArrayList<>();
