@@ -13,6 +13,7 @@ public class CreatureEntity extends gameCharacter implements Serializable {
         setIsCreature(true);
         setHasCollision(true);
         setCanMove(true);
+        setVelocity(3.0f);
         initPaint(Color.BLUE);
     }
 

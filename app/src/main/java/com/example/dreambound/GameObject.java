@@ -84,6 +84,8 @@ public class GameObject implements Serializable {
         paint.setColor(color);
     }
 
+    public float velocity = 0.00f;
+
     public boolean isTile = false;
     public boolean hasCollision = false;
     public boolean isPlayer = false;
@@ -95,6 +97,8 @@ public class GameObject implements Serializable {
     GameObject(float x, float y, float width, float height) {
         box = new RectangleBox(x, y, width, height);
         initPaint(Color.WHITE); //will be switched with a default of transparent
+        setVelocity(0.0f);
+
     }
 
     //accessors and mutators
@@ -153,6 +157,10 @@ public class GameObject implements Serializable {
     public float getHeight() {
         return box.height;
     }
+
+    public float getVelocity() { return velocity; }
+
+    public void setVelocity(float velocity) { this.velocity = velocity; }
 
     //change dimensions function
     public void changeDimensions(int width, int height) {

@@ -92,9 +92,9 @@ public class GameView extends SurfaceView implements Runnable {
             float deltaY = targetY - playerY;
             float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-            if (distance > player.getPlayerMovementSpeed()) {
-                float stepX = player.getPlayerMovementSpeed() * (deltaX / distance);
-                float stepY = player.getPlayerMovementSpeed() * (deltaY / distance);
+            if (distance > player.getVelocity()) {
+                float stepX = player.getVelocity() * (deltaX / distance);
+                float stepY = player.getVelocity() * (deltaY / distance);
                 player.setX(playerX + stepX);
                 player.setY(playerY + stepY);
             } else {

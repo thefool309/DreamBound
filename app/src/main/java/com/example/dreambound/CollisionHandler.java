@@ -45,7 +45,7 @@ public class CollisionHandler {
                 }
                 else if (checkCollision(object, target)) {
                     if(object.getIsPlayer() || target.getIsPlayer()) {
-                        collisionWithObjectEvent();
+                        collisionWithObjectEvent(object, target);
                     }
                     else {
                         collisionFromCreaturesToNonPlayer();
@@ -76,7 +76,10 @@ public class CollisionHandler {
 
 
 
-    private void collisionWithObjectEvent() {
+    private void collisionWithObjectEvent(GameObject object, GameObject target) {
+
+
+
         Log.i("Player Collision Detected", "Collision with object event");
     }
 
@@ -94,4 +97,6 @@ public class CollisionHandler {
     private void collisionFromCreaturesToNonPlayer() {
         Log.i("CreatureEntity Collision Detected", "Collision From Creature To Non-Player event");
     }
+
+
 }
