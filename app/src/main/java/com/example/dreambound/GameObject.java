@@ -93,6 +93,7 @@ public class GameObject implements Serializable {
     public boolean isCreature = false;
     public boolean isNPC = false;
     public boolean canMove = false;
+    public boolean isMoving = false;
 
     GameObject(float x, float y, float width, float height) {
         box = new RectangleBox(x, y, width, height);
@@ -145,6 +146,10 @@ public class GameObject implements Serializable {
     public boolean getIsCreature() { return isCreature; }
 
     public void setIsCreature(boolean creature) { isCreature = creature; }
+
+    public void setIsMoving(boolean moving) { isMoving = moving; }
+
+    public boolean getIsMoving() { return isMoving; }
 
     public RectangleBox getBox() {
         return box;

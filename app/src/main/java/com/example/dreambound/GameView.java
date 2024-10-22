@@ -84,29 +84,8 @@ public class GameView extends SurfaceView implements Runnable {
 
 
     private void update() {
-        if (isMoving) {
-            startTime = SystemClock.uptimeMillis();
-            float playerX = player.getX();
-            float playerY = player.getY();
-            float deltaX = targetX - playerX;
-            float deltaY = targetY - playerY;
-            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-            if (distance > player.getVelocity()) {
-                float stepX = player.getVelocity() * (deltaX / distance);
-                float stepY = player.getVelocity() * (deltaY / distance);
-                player.setX(playerX + stepX);
-                player.setY(playerY + stepY);
-            } else {
-                player.setX(targetX);
-                player.setY(targetY);
-            }
-        }else {
-            player.setX(targetX);
-            player.setY(targetY);
-            isMoving = false;
-        }
-
+        startTime = SystemClock.uptimeMillis();
+        player.playerMovementDetection(targetX, targetY);
         for (CreatureEntity entity: creatures) {
             entity.followPlayer(player);
         }
@@ -152,7 +131,7 @@ public class GameView extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_MOVE:
                 targetX = event.getX();
                 targetY = event.getY();
-                isMoving = true;
+                player.setIsMoving(true);
                 break;
         }
         return true;

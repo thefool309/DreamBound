@@ -25,10 +25,6 @@ public class CreatureEntity extends gameCharacter implements Serializable {
 
     //accessors and mutators
 
-    public float getCreatureEntitySpeed() { return creatureEntitySpeed; }
-
-    public void setCreatureEntitySpeed(float speed) { creatureEntitySpeed = speed; }
-
     public float getCreatureEntityDetectionRadius() { return creatureEntityDetectionRadius; }
 
     public void setCreatureEntityDetectionRadius(float creatureEntityDetectionRadius) { this.creatureEntityDetectionRadius = creatureEntityDetectionRadius; }

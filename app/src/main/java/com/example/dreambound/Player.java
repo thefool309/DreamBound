@@ -19,6 +19,31 @@ public class Player extends gameCharacter implements Serializable {
     //accessors and mutators
 
 
+    public void playerMovementDetection(float targetX, float targetY) {
+        if (getIsMoving()) {
+
+            float playerX = getX();
+            float playerY = getY();
+            float deltaX = targetX - playerX;
+            float deltaY = targetY - playerY;
+            float distance = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            if (distance > getVelocity()) {
+                float stepX = getVelocity() * (deltaX / distance);
+                float stepY = getVelocity() * (deltaY / distance);
+                setX(playerX + stepX);
+                setY(playerY + stepY);
+            } else {
+                setX(targetX);
+                setY(targetY);
+            }
+        }else {
+            setX(targetX);
+            setY(targetY);
+            isMoving = false;
+        }
+    }
+
     //draw
     @Override
     public void draw(Canvas canvas) {
