@@ -12,7 +12,7 @@ public class Obstacle extends Tile {
         paint.setColor(Color.GREEN);
     }
 
-    //constructor with Dynamic Size
+    //constructor with Dynamic Size and Bitmap
     public Obstacle(float x, float y, float width, float height, Bitmap image) {
         super(x, y, width, height, null);
         setHasCollision(true);
