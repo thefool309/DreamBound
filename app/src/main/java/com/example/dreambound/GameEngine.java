@@ -56,16 +56,27 @@ public class GameEngine {
 
 
         player = new Player(100, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
+
+        //bitmap wall 1 & 3
+        Bitmap topAndBottom = BitmapFactory.decodeResource(context.getResources(),R.drawable.wall1_3);
+        //Bitmap wall 2 & 4
+        Bitmap leftAndRight = BitmapFactory.decodeResource(context.getResources(),R.drawable.walls2_4);
+        //iwallX = image wallX
+        Bitmap iWall5 = BitmapFactory.decodeResource(context.getResources(),R.drawable.wall_5);
+        Bitmap iWall6 = BitmapFactory.decodeResource(context.getResources(),R.drawable.wall_6);
+        Bitmap iWall7 = BitmapFactory.decodeResource(context.getResources(),R.drawable.wall_7);
+        Bitmap iWall8 = BitmapFactory.decodeResource(context.getResources(),R.drawable.wall_8);
+
         enemy1 = new CreatureEntity(550, 650, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
         enemy2 = new CreatureEntity(2200, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
-        wall1 = new Obstacle(0, 0, 2400, 32);
-        wall2= new Obstacle (2368,0, 32 , 1080);
-        wall3 = new Obstacle(0,922, 2400, 32);
-        wall4 = new Obstacle(0,0, 32, 1080);
-        wall5 = new Obstacle(250,0,32 , 150);
-        wall6 = new Obstacle(250,400,32 , 600);
-        wall7 = new Obstacle(600,0,80 , 550);
-        wall8 = new Obstacle(1550,200,550 , 550);
+        wall1 = new Obstacle(0, 0, 2400, 32,topAndBottom);
+        wall2 = new Obstacle (2368,0, 32 , 1080,leftAndRight);
+        wall3 = new Obstacle(0,922, 2400, 32,topAndBottom);
+        wall4 = new Obstacle(0,0, 32, 1080,leftAndRight);
+        wall5 = new Obstacle(250,42,32 , 150,iWall5);
+        wall6 = new Obstacle(250,400,32 , 525,iWall6);
+        wall7 = new Obstacle(600,42,80 , 550,iWall7);
+        wall8 = new Obstacle(1550,200,550 , 550,iWall8);
 
         //Bitmap for GRASS
         Bitmap grass = BitmapFactory.decodeResource(context.getResources(), R.drawable._grass);
@@ -79,15 +90,24 @@ public class GameEngine {
         creaturesLoadedIn.add(enemy2);
 
         obstacles.add(wall1);
+        allObjects.add(wall1);
         obstacles.add(wall2);
+        allObjects.add(wall2);
         obstacles.add(wall3);
+        allObjects.add(wall3);
         obstacles.add(wall4);
+        allObjects.add(wall4);
         obstacles.add(wall5);
+        allObjects.add(wall5);
         obstacles.add(wall6);
+        allObjects.add(wall6);
         obstacles.add(wall7);
+        allObjects.add(wall7);
         obstacles.add(wall8);
+        allObjects.add(wall8);
 
         allObjects.add(grassTile);
+        allObjects.add(player);
 
         upcastObjectsIntoArrays();
 

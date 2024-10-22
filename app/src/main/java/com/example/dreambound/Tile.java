@@ -3,7 +3,7 @@ package com.example.dreambound;
 import android.graphics.*;
 
 public class Tile extends GameObject {
-    private Bitmap image;
+    public Bitmap image;
 
     public Tile(float x, float y) {
         super(x, y, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);

@@ -124,14 +124,15 @@ public class GameView extends SurfaceView implements Runnable {
             Canvas canvas = surfaceHolder.lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(Color.BLACK);
-
                 for(GameObject floor : allObjects){
                     floor.draw(canvas);
                 }
                 for (Obstacle object : obstacles){
                     object.draw(canvas);
                 }
-                player.draw(canvas);
+                for(GameObject walls : collidables){
+                    walls.draw(canvas);
+                }
                 for (CreatureEntity creature : creatures){
                     creature.draw(canvas);
                 }
