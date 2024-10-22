@@ -69,10 +69,10 @@ public class GameEngine {
 
         enemy1 = new CreatureEntity(550, 650, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
         enemy2 = new CreatureEntity(2200, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
-        wall1 = new Obstacle(0, 0, 2400, 32,topAndBottom);
+        wall1 = new Obstacle(0, 0, 2400, 40,topAndBottom);
         wall2 = new Obstacle (2368,0, 32 , 1080,leftAndRight);
         wall3 = new Obstacle(0,922, 2400, 32,topAndBottom);
-        wall4 = new Obstacle(0,0, 32, 1080,leftAndRight);
+        wall4 = new Obstacle(0,0, 40, 1080,leftAndRight);
         wall5 = new Obstacle(250,42,32 , 150,iWall5);
         wall6 = new Obstacle(250,400,32 , 525,iWall6);
         wall7 = new Obstacle(600,42,80 , 550,iWall7);
