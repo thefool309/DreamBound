@@ -19,7 +19,7 @@ public class Player extends gameCharacter implements Serializable {
     //accessors and mutators
 
 
-    public void playerMovementDetection(float targetX, float targetY) {
+    public void playerMovement(float targetX, float targetY) {
         if (getIsMoving()) {
 
             float playerX = getX();

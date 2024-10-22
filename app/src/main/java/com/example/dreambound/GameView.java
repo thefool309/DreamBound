@@ -85,7 +85,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update() {
         startTime = SystemClock.uptimeMillis();
-        player.playerMovementDetection(targetX, targetY);
+        player.playerMovement(targetX, targetY);
         for (CreatureEntity entity: creatures) {
             entity.followPlayer(player);
         }
