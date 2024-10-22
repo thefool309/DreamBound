@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BattleFragment extends Fragment {
+public class BattleFragment extends Fragment implements BattleGameView.OnEnemySelectedListener {
     private Player[] players;
     private CreatureEntity[] enemies;
     private int currentTurnIndex = 0;
@@ -19,9 +19,16 @@ public class BattleFragment extends Fragment {
     private Button attackButton, nextbutton;
     private TextView battleLogTextView;
     private Queue<String> battleLog = new LinkedList<>();
+    private boolean selectingTarget = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_battle, container, false);
+        battleGameView = view.findViewById(R.id.battleGameView);
+        battleLogTextView = view.findViewById(R.id.battleLogTextView);
+        attackButton = view.findViewById(R.id.buttonAttack);
+        nextbutton = view.findViewById(R.id.buttonNextLog);
+
         // Set up players and enemies
         players = new Player[] {new Player(100, 600, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
                 , new Player(100, 700, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
@@ -31,11 +38,15 @@ public class BattleFragment extends Fragment {
                 , new CreatureEntity(2200, 700, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
                 , new CreatureEntity(2200, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE)
         };
-        View view = inflater.inflate(R.layout.fragment_battle, container, false);
-        battleGameView = view.findViewById(R.id.battleGameView);
-        battleLogTextView = view.findViewById(R.id.battleLogTextView);
-        attackButton = view.findViewById(R.id.buttonAttack);
-        nextbutton = view.findViewById(R.id.buttonNextLog);
+
+        // Set up the game view
+        if (battleGameView != null) {
+            battleGameView.setCreatures(enemies);
+            battleGameView.setPlayers(players);
+            battleGameView.setOnEnemySelectedListener(this);
+        } else {
+            Log.d("BattleFragment", "BattleGameView is null");
+        }
 
         // Set up the next button listener for the log
         nextbutton.setOnClickListener(new View.OnClickListener() {
@@ -49,9 +60,8 @@ public class BattleFragment extends Fragment {
         attackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playerAttack();
-                disableButtons();
                 displayNextMessage();
+                enableTargetSelection();
             }
         });
 
@@ -60,16 +70,27 @@ public class BattleFragment extends Fragment {
         displayNextMessage(); // Show the first message and wait for input
         disableButtons(); // Disable attack button initially to show first log message
 
-        if (battleGameView != null) {
-            battleGameView.setCreatures(enemies);
-            battleGameView.setPlayers(players);
-        }else {
-            Log.d("BattleFragment", "BattleGameView is null");
-        }
-
         startBattle();
 
         return view;
+    }
+
+
+    public void onEnemySelected(int enemyIndex) {
+        if (selectingTarget) {
+            playerAttack(enemyIndex);
+            disableTargetSelection();
+        }
+    }
+
+    private void enableTargetSelection() {
+        selectingTarget = true;
+        disableButtons(); // Disable attack button while selecting
+    }
+
+    private void disableTargetSelection() {
+        selectingTarget = false;
+        enableButtons(); // Re-enable attack button after selection
     }
 
     private void displayNextMessage() {
@@ -170,24 +191,24 @@ public class BattleFragment extends Fragment {
     }
 
 
-    private void playerAttack() {
-        // Ensure currentTurnIndex is within bounds
-        if (currentTurnIndex >= players.length + enemies.length) {
-            return; // Index out of bounds, so exit the method
+    private void playerAttack(int enemyIndex) {
+        if (enemyIndex < 0 || enemyIndex >= enemies.length) {
+            logBattleMessage("Invalid enemy target!");
+            return; // Invalid index, exit method
         }
 
-        // Attack an enemy
-        int enemyIndex = currentTurnIndex % enemies.length; // Get the correct enemy index
-
-        if (enemyIndex < enemies.length && players[currentTurnIndex].isAlive()) {
-            CreatureEntity target = enemies[enemyIndex];
+        CreatureEntity target = enemies[enemyIndex];
+        if (target != null && target.isAlive()) {
             target.takeDamage(players[currentTurnIndex].stats.Attack);
             logBattleMessage("Player " + (currentTurnIndex + 1) + " attacked! Enemy " + (enemyIndex + 1) + " has " + target.getHealth() + " health left.");
 
             if (!target.isAlive()) {
                 logBattleMessage("Enemy " + (enemyIndex + 1) + " is defeated!");
             }
+        } else {
+            logBattleMessage("Enemy is already defeated!");
         }
+
         nextTurn();
     }
 
