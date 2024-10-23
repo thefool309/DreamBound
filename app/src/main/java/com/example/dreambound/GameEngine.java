@@ -55,7 +55,7 @@ public class GameEngine {
         Tile grassTile;
 
 
-        player = new Player(100, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
+        player = new Player(150, 800, Constants.CHUNK_SIZE, Constants.CHUNK_SIZE);
 
         //bitmap wall 1 & 3
         Bitmap topAndBottom = BitmapFactory.decodeResource(context.getResources(),R.drawable.wall1_3);
