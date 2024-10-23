@@ -143,7 +143,6 @@ public class BattleFragment extends Fragment implements BattleGameView.OnEnemySe
             if (players[currentTurnIndex].isAlive()) {
                 logBattleMessage("Player " + (currentTurnIndex + 1) + "'s turn.");
             } else {
-                logBattleMessage("Player " + (currentTurnIndex + 1) + " is defeated!");
                 nextTurn();// Skip to the next turn if the player is defeated
             }
         } else {
@@ -152,9 +151,7 @@ public class BattleFragment extends Fragment implements BattleGameView.OnEnemySe
             if (enemies[enemyIndex].isAlive()) {
                 logBattleMessage("Enemy " + (enemyIndex + 1) + "'s turn.");
                 enemyAttack(); // Enemy automatically attacks
-
             } else {
-                logBattleMessage("Enemy " + (enemyIndex + 1) + " is defeated!");
                 nextTurn();// Skip to the next turn if the enemy is defeated
             }
         }
@@ -203,7 +200,7 @@ public class BattleFragment extends Fragment implements BattleGameView.OnEnemySe
             logBattleMessage("Player " + (currentTurnIndex + 1) + " attacked! Enemy " + (enemyIndex + 1) + " has " + target.getHealth() + " health left.");
 
             if (!target.isAlive()) {
-                logBattleMessage("Player " + (currentTurnIndex + 1) + " is defeated!");
+                logBattleMessage("Enemy " + (enemyIndex + 1) + " is defeated!");
                 battleGameView.invalidate();
             }
         }
