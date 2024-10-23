@@ -32,12 +32,16 @@ public class BattleGameView extends View {
         super.onDraw(canvas);
         if (creatures != null) {
             for (CreatureEntity creature : creatures) {
-                creature.draw(canvas);
+                if (creature.isAlive()) {
+                    creature.draw(canvas);
+                }
             }
         }
         if (players != null) {
             for (Player player : players) {
-                player.draw(canvas);
+                if (player.isAlive()) {
+                    player.draw(canvas);
+                }
             }
         }
     }
@@ -51,7 +55,7 @@ public class BattleGameView extends View {
             // Check if the touch is inside any enemy's area
             for (int i = 0; i < creatures.length; i++) {
                 CreatureEntity creature = creatures[i];
-                if (creature != null && isTouchInsideObject(x, y, creature)) {
+                if (creature.isAlive() && isTouchInsideObject(x, y, creature)) {
                     if (enemySelectedListener != null) {
                         enemySelectedListener.onEnemySelected(i);
                     }
