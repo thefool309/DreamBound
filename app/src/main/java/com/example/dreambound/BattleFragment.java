@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 
 public class BattleFragment extends Fragment implements BattleGameView.OnEnemySelectedListener {
     private Player[] players;
@@ -53,6 +54,7 @@ public class BattleFragment extends Fragment implements BattleGameView.OnEnemySe
             @Override
             public void onClick(View v) {
                 displayNextMessage();
+                battleGameView.invalidate();
             }
         });
 
@@ -201,7 +203,6 @@ public class BattleFragment extends Fragment implements BattleGameView.OnEnemySe
 
             if (!target.isAlive()) {
                 logBattleMessage("Enemy " + (enemyIndex + 1) + " is defeated!");
-                battleGameView.invalidate();
             }
         }
 
@@ -212,20 +213,41 @@ public class BattleFragment extends Fragment implements BattleGameView.OnEnemySe
         int enemyIndex = currentTurnIndex - players.length;
 
         if (enemyIndex < enemies.length && enemies[enemyIndex].isAlive()) {
-            Player target = players[currentTurnIndex % players.length];
-            target.takeDamage(enemies[enemyIndex].stats.Attack);
-            logBattleMessage("Enemy " + (enemyIndex + 1) + " attacked! Player " + ((currentTurnIndex % players.length) + 1) + " has " + target.getHealth() + " health left.");
+            int playerIndex = getRandomAlivePlayerIndex();
+            if (playerIndex != -1) {
+                Player target = players[playerIndex];
+                target.takeDamage(enemies[enemyIndex].stats.Attack);
+                logBattleMessage("Enemy " + (enemyIndex + 1) + " attacked! Player " + (playerIndex + 1) + " has " + target.getHealth() + " health left.");
 
-            if (!target.isAlive()) {
-                logBattleMessage("Player " + (currentTurnIndex + 1) + " is defeated!");
-                battleGameView.invalidate();
+                if (!target.isAlive()) {
+                    logBattleMessage("Player " + (playerIndex + 1) + " is defeated!");
+                }
             }
-        } else {
+        }else {
             logBattleMessage("Invalid enemy index.");
         }
 
         nextTurn();
     }
+
+    private int getRandomAlivePlayerIndex() {
+        Random random = new Random();
+        int attempts = 0;
+        int maxAttempts = players.length; // Limit attempts to avoid infinite loops
+
+        while (attempts < maxAttempts) {
+            int randomIndex = random.nextInt(players.length);
+            Player target = players[randomIndex];
+            if (target != null && target.isAlive()) {
+                return randomIndex; // Return the index of the alive player
+            }
+            attempts++;
+        }
+
+        // If no alive player is found, return -1 to indicate failure
+        return -1;
+    }
+
 
     private void enableButtons() {
         attackButton.setEnabled(true);
