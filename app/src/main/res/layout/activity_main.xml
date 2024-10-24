@@ -24,23 +24,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="16dp" />
 
-        <ScrollView
-            android:id="@+id/faeDexScrollView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+        <!-- Bag Submenu -->
+        <LinearLayout
+            android:id="@+id/bagMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:background="@android:color/darker_gray"
+            android:padding="10dp"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/bagButton"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="gone">
+            android:layout_marginTop="8dp">
 
-            <TextView
-                android:id="@+id/faeListTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textSize="18sp" />
-        </ScrollView>
+            <Button android:id="@+id/itemsButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Items" />
+            <Button android:id="@+id/partyButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Party" />
+            <Button android:id="@+id/faeDexButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="FaeDex" />
+            <Button android:id="@+id/saveLoadButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Save/Load" />
+            <Button android:id="@+id/settingsButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Settings" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

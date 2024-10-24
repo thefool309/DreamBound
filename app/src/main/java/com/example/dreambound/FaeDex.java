@@ -1,9 +1,10 @@
 package com.example.dreambound;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FaeDex {
+public class FaeDex implements Serializable {
     private List<Fae> faeList;
 
     public FaeDex() {

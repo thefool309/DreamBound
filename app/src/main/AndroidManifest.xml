@@ -22,6 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".BattleActivity"/>
+        <activity android:name=".FaeDexActivity"
+                  android:exported="true"/>
     </application>
 
 </manifest>
